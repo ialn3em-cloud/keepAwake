@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">إبقاء الشاشة</string>
+    <string name="hint_on">الشاشة مضاءة</string>
+    <string name="hint_off">اضغط لإبقاء الشاشة مضاءة</string>
+    <string name="notif_title">الشاشة تبقى مفتوحة</string>
+    <string name="notif_text">اضغط لفتح التطبيق وإيقافها</string>
+    <string name="need_permission">فعّل «العرض فوق التطبيقات الأخرى» ثم ارجع واضغط المفتاح</string>
+</resources>
