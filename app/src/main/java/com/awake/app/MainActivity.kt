@@ -5,39 +5,24 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.Toast
 
 class MainActivity : Activity() {
 
-    private lateinit var button: Button
+    private lateinit var sw: SwitchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = Color.parseColor("#1B1C1F")
+        window.navigationBarColor = Color.parseColor("#1B1C1F")
 
-        button = Button(this).apply {
-            textSize = 30f
-            setTextColor(Color.WHITE)
-            isAllCaps = false
-            setOnClickListener { toggle() }
-        }
-        val root = FrameLayout(this)
-        val h = (160 * resources.displayMetrics.density).toInt()
-        val m = (32 * resources.displayMetrics.density).toInt()
-        root.addView(
-            button,
-            FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, h, Gravity.CENTER)
-                .apply { setMargins(m, 0, m, 0) }
-        )
-        setContentView(root)
+        sw = SwitchView(this)
+        sw.onToggle = { toggle() }
+        setContentView(sw)
 
         if (Build.VERSION.SDK_INT >= 33 &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
@@ -48,7 +33,7 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        refresh()
+        sw.setOn(AwakeService.running, false)
     }
 
     private fun toggle() {
@@ -56,6 +41,7 @@ class MainActivity : Activity() {
         if (AwakeService.running) {
             stopService(service)
             AwakeService.running = false
+            sw.setOn(false, true)
         } else {
             if (!Settings.canDrawOverlays(this)) {
                 Toast.makeText(this, R.string.need_permission, Toast.LENGTH_LONG).show()
@@ -66,16 +52,7 @@ class MainActivity : Activity() {
             }
             startForegroundService(service)
             AwakeService.running = true
-        }
-        refresh()
-    }
-
-    private fun refresh() {
-        val on = AwakeService.running
-        button.setText(if (on) R.string.btn_off else R.string.btn_on)
-        button.background = GradientDrawable().apply {
-            cornerRadius = 48f
-            setColor(if (on) Color.parseColor("#E53935") else Color.parseColor("#43A047"))
+            sw.setOn(true, true)
         }
     }
 }
