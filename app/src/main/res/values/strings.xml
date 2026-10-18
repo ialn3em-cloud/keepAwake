@@ -6,4 +6,8 @@
     <string name="notif_title">Screen is staying on</string>
     <string name="notif_text">Tap to open the app and turn it off</string>
     <string name="need_permission">Allow Display over other apps, then come back and tap the switch</string>
+    <string name="widget_desc">Tap the switch to keep the screen on or off</string>
+    <string name="battery_stop">Stopped: battery is low</string>
+    <string name="tile_on">On</string>
+    <string name="tile_off">Off</string>
 </resources>

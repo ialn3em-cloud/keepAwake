@@ -6,4 +6,8 @@
     <string name="notif_title">الشاشة تبقى مفتوحة</string>
     <string name="notif_text">اضغط لفتح التطبيق وإيقافها</string>
     <string name="need_permission">فعّل «العرض فوق التطبيقات الأخرى» ثم ارجع واضغط المفتاح</string>
+    <string name="widget_desc">اضغط المفتاح لإبقاء الشاشة مضاءة أو إيقافها</string>
+    <string name="battery_stop">تم الإيقاف: البطارية منخفضة</string>
+    <string name="tile_on">مضاءة</string>
+    <string name="tile_off">متوقف</string>
 </resources>
