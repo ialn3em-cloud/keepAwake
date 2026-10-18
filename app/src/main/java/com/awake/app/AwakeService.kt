@@ -10,10 +10,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ServiceInfo
+import android.graphics.PixelFormat
 import android.os.BatteryManager
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 
 class AwakeService : Service() {
@@ -24,6 +27,7 @@ class AwakeService : Service() {
         @Volatile var running = false
     }
 
+    private var overlay: View? = null
     private var fresh = false
     private var batteryRegistered = false
     private var wakeLock: PowerManager.WakeLock? = null
@@ -70,6 +74,23 @@ class AwakeService : Service() {
             startForeground(1, notification)
         }
 
+        val params = WindowManager.LayoutParams(
+            1, 1,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            PixelFormat.TRANSLUCENT
+        )
+        overlay = View(this)
+        try {
+            getSystemService(WindowManager::class.java).addView(overlay, params)
+        } catch (e: Exception) {
+            overlay = null
+            Toast.makeText(this, R.string.need_permission, Toast.LENGTH_LONG).show()
+            stopSelf()
+            return
+        }
         running = true
         SwitchWidget.refresh(this)
         acquireWake()
@@ -116,6 +137,10 @@ class AwakeService : Service() {
             try { unregisterReceiver(batteryReceiver) } catch (_: Exception) {}
             batteryRegistered = false
         }
+        overlay?.let {
+            try { getSystemService(WindowManager::class.java).removeView(it) } catch (_: Exception) {}
+        }
+        overlay = null
         SwitchWidget.refresh(this)
         super.onDestroy()
     }
