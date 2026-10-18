@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Keep Screen On</string>
+    <string name="app_name">Screen Switch</string>
     <string name="hint_on">Screen stays on</string>
     <string name="hint_off">Tap to keep the screen on</string>
     <string name="notif_title">Screen is staying on</string>
