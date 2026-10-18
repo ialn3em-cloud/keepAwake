@@ -125,6 +125,22 @@ class SwitchView(context: Context) : View(context) {
         c.drawRect(rocker, p)
         c.restore()
 
+        // I / O marks
+        val markCx = rocker.centerX()
+        p.reset()
+        p.isAntiAlias = true
+        p.color = Color.argb(240, 255, 255, 255)
+        val barW = rw * 0.085f
+        val barH = rw * 0.36f
+        val barCy = rocker.top + rh * 0.25f
+        c.drawRoundRect(
+            RectF(markCx - barW / 2f, barCy - barH / 2f, markCx + barW / 2f, barCy + barH / 2f),
+            barW / 2f, barW / 2f, p
+        )
+        p.style = Paint.Style.STROKE
+        p.strokeWidth = rw * 0.08f
+        c.drawCircle(markCx, rocker.top + rh * 0.75f, rw * 0.16f, p)
+
         p.reset()
         p.isAntiAlias = true
         p.style = Paint.Style.STROKE
