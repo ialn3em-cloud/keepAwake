@@ -14,6 +14,7 @@ import android.graphics.PixelFormat
 import android.os.BatteryManager
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -29,6 +30,7 @@ class AwakeService : Service() {
     private var overlay: View? = null
     private var fresh = false
     private var batteryRegistered = false
+    private var wakeLock: PowerManager.WakeLock? = null
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -91,6 +93,7 @@ class AwakeService : Service() {
         }
         running = true
         SwitchWidget.refresh(this)
+        acquireWake()
 
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         if (Build.VERSION.SDK_INT >= 33) {
@@ -99,6 +102,24 @@ class AwakeService : Service() {
             registerReceiver(batteryReceiver, filter)
         }
         batteryRegistered = true
+    }
+
+    @Suppress("DEPRECATION")
+    private fun acquireWake() {
+        try {
+            val lock = getSystemService(PowerManager::class.java)
+                .newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "ScreenSwitch:keepAwake")
+            lock.setReferenceCounted(false)
+            lock.acquire()
+            wakeLock = lock
+        } catch (_: Exception) {}
+    }
+
+    private fun releaseWake() {
+        try {
+            wakeLock?.let { if (it.isHeld) it.release() }
+        } catch (_: Exception) {}
+        wakeLock = null
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -111,6 +132,7 @@ class AwakeService : Service() {
 
     override fun onDestroy() {
         running = false
+        releaseWake()
         if (batteryRegistered) {
             try { unregisterReceiver(batteryReceiver) } catch (_: Exception) {}
             batteryRegistered = false
