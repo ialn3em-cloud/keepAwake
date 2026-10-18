@@ -75,15 +75,15 @@ class SwitchView(context: Context) : View(context) {
         c.drawRoundRect(plate, pr, pr, p)
 
         // indicator light
-        val iw = pw * 0.22f
+        val iw = pw * 0.36f
         val ih = iw * 0.38f
-        val icy = top + ph * 0.27f
+        val icy = top + ph * 0.265f
         val ir = RectF(cx - iw / 2f, icy - ih / 2f, cx + iw / 2f, icy + ih / 2f)
         p.reset()
         p.isAntiAlias = true
         p.color = ev.evaluate(t, Color.parseColor("#5C1A1A"), Color.parseColor("#FF2B2B")) as Int
         if (t > 0f) {
-            p.setShadowLayer(iw * 0.5f * t, 0f, 0f, Color.argb((255 * t).toInt(), 255, 40, 40))
+            p.setShadowLayer(iw * 0.35f * t, 0f, 0f, Color.argb((255 * t).toInt(), 255, 40, 40))
         }
         c.drawRoundRect(ir, ih * 0.3f, ih * 0.3f, p)
         p.reset()
@@ -124,22 +124,6 @@ class SwitchView(context: Context) : View(context) {
         )
         c.drawRect(rocker, p)
         c.restore()
-
-        // I / O marks
-        val markCx = rocker.centerX()
-        p.reset()
-        p.isAntiAlias = true
-        p.color = Color.argb(240, 255, 255, 255)
-        val barW = rw * 0.085f
-        val barH = rw * 0.36f
-        val barCy = rocker.top + rh * 0.25f
-        c.drawRoundRect(
-            RectF(markCx - barW / 2f, barCy - barH / 2f, markCx + barW / 2f, barCy + barH / 2f),
-            barW / 2f, barW / 2f, p
-        )
-        p.style = Paint.Style.STROKE
-        p.strokeWidth = rw * 0.08f
-        c.drawCircle(markCx, rocker.top + rh * 0.75f, rw * 0.16f, p)
 
         p.reset()
         p.isAntiAlias = true
