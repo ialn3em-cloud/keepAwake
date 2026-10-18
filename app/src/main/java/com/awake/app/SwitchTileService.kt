@@ -19,10 +19,6 @@ class SwitchTileService : TileService() {
             stopService(service)
             AwakeService.running = false
         } else {
-            if (!Settings.canDrawOverlays(this)) {
-                openApp()
-                return
-            }
             try {
                 startForegroundService(service)
                 AwakeService.running = true

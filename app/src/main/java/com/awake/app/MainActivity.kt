@@ -72,13 +72,6 @@ class MainActivity : Activity() {
             sw.setOn(false, true)
             feedback(false)
         } else {
-            if (!Settings.canDrawOverlays(this)) {
-                Toast.makeText(this, R.string.need_permission, Toast.LENGTH_LONG).show()
-                startActivity(
-                    Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-                )
-                return
-            }
             startForegroundService(service)
             AwakeService.running = true
             sw.setOn(true, true)
