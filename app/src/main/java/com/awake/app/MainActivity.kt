@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.HapticFeedbackConstants
 import android.widget.Toast
 
 class MainActivity : Activity() {
@@ -70,7 +69,7 @@ class MainActivity : Activity() {
 
     private fun feedback(on: Boolean) {
         pool.play(if (on) soundOn else soundOff, 1f, 1f, 1, 0, 1f)
-        sw.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        Haptics.click(this)
     }
 
     private fun toggle() {

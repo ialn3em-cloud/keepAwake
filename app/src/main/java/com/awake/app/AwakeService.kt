@@ -208,10 +208,12 @@ class AwakeService : Service() {
             if (!fresh) {
                 // the service was already running: this tap turns it off
                 playSound(soundOff)
+                Haptics.click(this)
                 handler.postDelayed({ stopSelf() }, 300)
             } else if (running) {
                 // the service was just created by this tap: it is turning on
                 playSound(soundOn)
+                Haptics.click(this)
             }
         }
         fresh = false
