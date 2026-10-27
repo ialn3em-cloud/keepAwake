@@ -13,7 +13,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.awake.app"
+        applicationId = "com.ialn3em.screenswitch"
         minSdk = 26
         targetSdk = 34
         // grows with every GitHub build so each new APK installs over the previous one
