@@ -23,6 +23,10 @@ class SwitchTileService : TileService() {
                 openApp()
                 return
             }
+            AwakeService.lowBattery(this)?.let {
+                AwakeService.showLowBattery(this, it)
+                return
+            }
             try {
                 startForegroundService(service)
                 AwakeService.running = true

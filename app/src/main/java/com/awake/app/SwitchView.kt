@@ -12,6 +12,7 @@ import android.graphics.RectF
 import android.graphics.Shader
 import android.view.MotionEvent
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.DecelerateInterpolator
 
 class SwitchView(context: Context) : View(context) {
@@ -19,7 +20,8 @@ class SwitchView(context: Context) : View(context) {
     var onToggle: (() -> Unit)? = null
 
     private var t = 0f
-    private var isOn = false
+    var isOn = false
+        private set
     private var anim: ValueAnimator? = null
     private val rocker = RectF()
     private val path = Path()
@@ -29,10 +31,30 @@ class SwitchView(context: Context) : View(context) {
 
     init {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
+        isFocusable = true
+        isClickable = true
+        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
+        updateDescription()
+    }
+
+    // read by TalkBack: "Screen Switch, switch, on/off"
+    private fun updateDescription() {
+        contentDescription = context.getString(R.string.app_name)
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            stateDescription = context.getString(if (isOn) R.string.a11y_on else R.string.a11y_off)
+        }
+    }
+
+    override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfo) {
+        super.onInitializeAccessibilityNodeInfo(info)
+        info.className = "android.widget.Switch"
+        info.isCheckable = true
+        info.isChecked = isOn
     }
 
     fun setOn(on: Boolean, animate: Boolean) {
         isOn = on
+        updateDescription()
         val target = if (on) 1f else 0f
         anim?.cancel()
         if (!animate) {
@@ -149,18 +171,17 @@ class SwitchView(context: Context) : View(context) {
                 val slop = rocker.width() * 0.4f
                 val hit = RectF(rocker)
                 hit.inset(-slop, -slop)
-                if (hit.contains(e.x, e.y)) {
-                    performClick()
-                    onToggle?.invoke()
-                }
+                if (hit.contains(e.x, e.y)) performClick()
                 return true
             }
         }
         return super.onTouchEvent(e)
     }
 
+    // TalkBack's double tap also arrives here
     override fun performClick(): Boolean {
         super.performClick()
+        onToggle?.invoke()
         return true
     }
 }

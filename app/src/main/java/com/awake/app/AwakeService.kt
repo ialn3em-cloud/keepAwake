@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -19,6 +20,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
+import android.service.quicksettings.TileService
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -27,8 +29,40 @@ class AwakeService : Service() {
 
     companion object {
         const val ACTION_TOGGLE = "com.awake.app.TOGGLE"
-        const val LOW_BATTERY = 15
+        const val LOW_BATTERY = 10
         @Volatile var running = false
+
+        // set by MainActivity while it is on screen, so the switch follows the real state
+        var onStateChanged: (() -> Unit)? = null
+
+        /** Battery percent when it is at or below LOW_BATTERY and not charging, otherwise null. */
+        fun lowBattery(context: Context): Int? {
+            val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                ?: return null
+            return lowBattery(intent)
+        }
+
+        private fun lowBattery(intent: Intent): Int? {
+            val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+            val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            val plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0)
+            if (level < 0 || scale <= 0) return null
+            val percent = level * 100 / scale
+            return if (plugged == 0 && percent <= LOW_BATTERY) percent else null
+        }
+
+        fun showLowBattery(context: Context, percent: Int) {
+            Toast.makeText(context, context.getString(R.string.battery_low_start, percent), Toast.LENGTH_LONG).show()
+        }
+
+        /** Refresh every place that shows the switch: widget, quick settings tile and the open app. */
+        fun notifyState(context: Context) {
+            SwitchWidget.refresh(context)
+            try {
+                TileService.requestListeningState(context, ComponentName(context, SwitchTileService::class.java))
+            } catch (_: Exception) {}
+            onStateChanged?.invoke()
+        }
     }
 
     private var overlay: View? = null
@@ -45,12 +79,7 @@ class AwakeService : Service() {
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-            val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-            val plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0)
-            if (level < 0 || scale <= 0) return
-            val percent = level * 100 / scale
-            if (plugged == 0 && percent <= LOW_BATTERY) {
+            if (lowBattery(intent) != null) {
                 Toast.makeText(context, R.string.battery_stop, Toast.LENGTH_LONG).show()
                 stopSelf()
             }
@@ -86,6 +115,13 @@ class AwakeService : Service() {
             startForeground(1, notification)
         }
 
+        // the widget starts the service directly, so check the battery here too
+        lowBattery(this)?.let {
+            showLowBattery(this, it)
+            stopSelf()
+            return
+        }
+
         val params = WindowManager.LayoutParams(
             1, 1,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
@@ -104,7 +140,7 @@ class AwakeService : Service() {
             return
         }
         running = true
-        SwitchWidget.refresh(this)
+        notifyState(this)
         acquireWake()
 
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
@@ -196,7 +232,7 @@ class AwakeService : Service() {
             try { getSystemService(WindowManager::class.java).removeView(it) } catch (_: Exception) {}
         }
         overlay = null
-        SwitchWidget.refresh(this)
+        notifyState(this)
         super.onDestroy()
     }
 }

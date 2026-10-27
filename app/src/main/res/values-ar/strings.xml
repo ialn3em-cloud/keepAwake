@@ -8,6 +8,9 @@
     <string name="need_permission">فعّل «العرض فوق التطبيقات الأخرى» ثم ارجع واضغط المفتاح</string>
     <string name="widget_desc">اضغط المفتاح لإبقاء الشاشة مضاءة أو إيقافها</string>
     <string name="battery_stop">تم الإيقاف: البطارية منخفضة</string>
+    <string name="battery_low_start">البطارية %1$d%%، وصّل الشاحن لتشغيل المفتاح</string>
+    <string name="a11y_on">مشغّل، الشاشة تبقى مضاءة</string>
+    <string name="a11y_off">متوقف</string>
     <string name="tile_on">مضاءة</string>
     <string name="tile_off">متوقف</string>
 </resources>

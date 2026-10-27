@@ -52,6 +52,15 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         sw.setOn(AwakeService.running, false)
+        // the service can stop by itself (low battery, missing permission) or be toggled from the widget/tile
+        AwakeService.onStateChanged = {
+            if (sw.isOn != AwakeService.running) sw.setOn(AwakeService.running, true)
+        }
+    }
+
+    override fun onPause() {
+        AwakeService.onStateChanged = null
+        super.onPause()
     }
 
     override fun onDestroy() {
@@ -77,6 +86,10 @@ class MainActivity : Activity() {
                 startActivity(
                     Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
                 )
+                return
+            }
+            AwakeService.lowBattery(this)?.let {
+                AwakeService.showLowBattery(this, it)
                 return
             }
             startForegroundService(service)
