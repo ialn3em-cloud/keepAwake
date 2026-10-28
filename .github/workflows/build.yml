@@ -29,7 +29,7 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: gradle assembleFreeRelease assembleProRelease --no-daemon
+        run: gradle assembleFreeRelease assembleProRelease bundleFreeRelease bundleProRelease --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: ScreenSwitch-Free
@@ -38,3 +38,10 @@ jobs:
         with:
           name: ScreenSwitch-Pro
           path: app/build/outputs/apk/pro/release/app-pro-release.apk
+      # .aab files are what Google Play accepts for upload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GooglePlay-AAB
+          path: |
+            app/build/outputs/bundle/freeRelease/app-free-release.aab
+            app/build/outputs/bundle/proRelease/app-pro-release.aab
