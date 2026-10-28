@@ -59,14 +59,14 @@ class MainActivity : Activity() {
             addView(sw, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
             addView(chips, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
-        // the switch and the timer, with the models and sound buttons in the corner and the Pro card under them
+        // the switch and the timer, with the models and sound buttons in the top corners and the Pro card under them
         val stage = FrameLayout(this).apply {
             addView(column)
             addView(stylesButton(), FrameLayout.LayoutParams(dp(44), dp(44), Gravity.TOP or Gravity.LEFT).apply {
                 setMargins(dp(16), dp(12), dp(16), dp(12))
             })
-            addView(soundButton(), FrameLayout.LayoutParams(dp(44), dp(44), Gravity.TOP or Gravity.LEFT).apply {
-                setMargins(dp(16 + 44 + 10), dp(12), dp(16), dp(12))
+            addView(soundButton(), FrameLayout.LayoutParams(dp(44), dp(44), Gravity.TOP or Gravity.RIGHT).apply {
+                setMargins(dp(16), dp(12), dp(16), dp(12))
             })
         }
         content = ProEntry.wrap(this, stage)
