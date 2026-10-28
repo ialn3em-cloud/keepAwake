@@ -2,7 +2,7 @@
 
 ## خطواتك في Play Console
 1. **Testing ← Closed testing ← Create track**، وسمّه مثلًا `Testers`.
-2. ارفع ملف التطبيق. Google Play يحتاج ملف **AAB** وليس APK: نزّل **GooglePlay-AAB** من آخر بناء في تبويب Actions، وارفع `app-free-release.aab` للمجانية أو `app-pro-release.aab` لبرو.
+2. ارفع ملف التطبيق. Google Play يحتاج ملف **AAB** وليس APK: نزّل **GooglePlay-AAB** من آخر بناء في تبويب Actions، وارفع `app-release.aab`.
    عند السؤال عن **App signing** اختر **Use Google-generated key**، ويبقى مفتاحك الحالي مفتاح رفع (upload key).
 3. **Testers ← Create email list**: أضف إيميلات Gmail لـ **15 إلى 20 شخصًا** احتياطًا.
 4. انسخ **رابط الانضمام (Join on the web)** وأرسله مع الرسالة التالية.
