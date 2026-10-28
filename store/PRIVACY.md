@@ -30,7 +30,7 @@
 التطبيق غير موجّه للأطفال ولا يجمع أي بيانات منهم.
 
 ## التواصل
-لأي سؤال: **[بريدك الإلكتروني]**
+لأي سؤال: sahla.labs@gmail.com
 
 ---
 
@@ -66,4 +66,4 @@ The Pro upgrade is bought through **Google Play**. Google handles the payment an
 The app is not directed at children and collects no data from anyone.
 
 ## Contact
-Questions: **[your email]**
+Questions: sahla.labs@gmail.com

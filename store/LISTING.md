@@ -154,5 +154,5 @@ Notes
 | App or game | App |
 | Free or paid | **Free** (برو شراء داخل التطبيق) |
 | Category | Tools |
-| Contact email | بريدك الإلكتروني |
+| Contact email | sahla.labs@gmail.com |
 | Privacy policy | الرابط في `PLAY_CONSOLE.md` |

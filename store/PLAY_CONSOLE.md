@@ -25,7 +25,6 @@
 ```
 https://github.com/ialn3em-cloud/keepAwake/blob/main/store/PRIVACY.md
 ```
-⚠️ قبل لصق الرابط: افتح `store/PRIVACY.md` على GitHub واكتب بريدك مكان **[بريدك الإلكتروني]** و **[your email]**.
 
 ## Ads
 **No, my app does not contain ads.**
