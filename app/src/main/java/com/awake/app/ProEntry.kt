@@ -72,11 +72,11 @@ object ProEntry {
         texts.addView(statusRow)
         card.addView(texts, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
 
-        // "›" points forward; in Arabic forward is to the left, so it is mirrored to "‹"
+        // the chevron points forward: right in English, left in Arabic
         card.addView(TextView(activity).apply {
-            text = "›"
+            val rtl = activity.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+            text = if (rtl) "‹" else "›"
             textSize = 22f
-            textDirection = View.TEXT_DIRECTION_LOCALE
         })
 
         root.addView(card, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
