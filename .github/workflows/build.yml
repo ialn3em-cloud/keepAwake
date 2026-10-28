@@ -29,19 +29,27 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: gradle assembleFreeRelease assembleProRelease bundleFreeRelease bundleProRelease --no-daemon
+        run: gradle assembleRelease bundleRelease assembleUnlocked --no-daemon
+      # the store listing and privacy policy promise no internet access; keep that true
+      - name: Check permissions
+        run: |
+          AAPT2=$(ls -d $ANDROID_HOME/build-tools/*/ | sort -V | tail -1)aapt2
+          $AAPT2 dump permissions app/build/outputs/apk/release/app-release.apk | tee permissions.txt
+          if grep -q "android.permission.INTERNET" permissions.txt; then
+            echo "::error::The app now asks for INTERNET; update store/PRIVACY.md and the listing first"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         with:
-          name: ScreenSwitch-Free
-          path: app/build/outputs/apk/free/release/app-free-release.apk
+          name: ScreenSwitch
+          path: app/build/outputs/apk/release/app-release.apk
+      # Pro unlocked, separate app; for testing on your own phone only, never upload it
       - uses: actions/upload-artifact@v4
         with:
-          name: ScreenSwitch-Pro
-          path: app/build/outputs/apk/pro/release/app-pro-release.apk
-      # .aab files are what Google Play accepts for upload
+          name: ScreenSwitch-Test
+          path: app/build/outputs/apk/unlocked/app-unlocked.apk
+      # the .aab file is what Google Play accepts for upload
       - uses: actions/upload-artifact@v4
         with:
           name: GooglePlay-AAB
-          path: |
-            app/build/outputs/bundle/freeRelease/app-free-release.aab
-            app/build/outputs/bundle/proRelease/app-pro-release.aab
+          path: app/build/outputs/bundle/release/app-release.aab

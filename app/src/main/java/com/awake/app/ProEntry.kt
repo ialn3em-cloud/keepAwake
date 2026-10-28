@@ -13,8 +13,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 /**
- * Pro build: the switch with an "Automatic apps" card under it.
- * The card is filled red while the feature is on, and dark with a red outline while it is off.
+ * The switch with an "Automatic apps" card under it.
+ * The card is filled red while the feature is on, dark with a red outline while it is off,
+ * and shows a gold "Pro" hint until the upgrade is bought (tapping it then opens the offer).
  */
 object ProEntry {
 
@@ -90,7 +91,8 @@ object ProEntry {
         val card = root.findViewWithTag<LinearLayout>(TAG_CARD) ?: return
         val context = card.context
         val count = WatcherService.chosenApps(context).size
-        val on = WatcherService.prefs(context).getBoolean(WatcherService.KEY_ENABLED, false) && count > 0
+        val locked = !Pro.isUnlocked(context)
+        val on = !locked && WatcherService.prefs(context).getBoolean(WatcherService.KEY_ENABLED, false) && count > 0
 
         val red = Color.parseColor("#C0392B")
         val textColor = if (on) Color.WHITE else Color.parseColor("#E6E8EB")
@@ -116,13 +118,13 @@ object ProEntry {
         val statusRow = texts.getChildAt(1) as LinearLayout
         statusRow.getChildAt(0).background = GradientDrawable().apply {
             shape = GradientDrawable.OVAL
-            setColor(Color.parseColor(if (on) "#7CFFB2" else "#8B9097"))
+            setColor(Color.parseColor(if (on) "#7CFFB2" else if (locked) "#F5B700" else "#8B9097"))
         }
         (statusRow.getChildAt(1) as TextView).apply {
-            text = if (on) {
-                context.resources.getQuantityString(R.plurals.auto_status_on, count, count)
-            } else {
-                context.getString(R.string.auto_status_off)
+            text = when {
+                locked -> context.getString(R.string.auto_status_locked)
+                on -> context.resources.getQuantityString(R.plurals.auto_status_on, count, count)
+                else -> context.getString(R.string.auto_status_off)
             }
             setTextColor(textColor)
             alpha = 0.85f

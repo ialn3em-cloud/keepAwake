@@ -4,7 +4,9 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
@@ -20,8 +22,9 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 
-/** Pro: choose the apps that keep the screen on automatically. */
+/** Pro: choose the apps that keep the screen on automatically. Shows the upgrade offer until Pro is bought. */
 class AutoAppsActivity : Activity() {
 
     private class App(val pkg: String, val label: String, val icon: Drawable)
@@ -33,6 +36,11 @@ class AutoAppsActivity : Activity() {
 
     private lateinit var master: Switch
     private lateinit var permBox: LinearLayout
+    private lateinit var offer: LinearLayout
+    private lateinit var buyButton: TextView
+    private lateinit var pickLabel: TextView
+    private lateinit var list: ListView
+    private val proListener: () -> Unit = { render() }
     private val apps = mutableListOf<App>()
     private val adapter = AppsAdapter()
 
@@ -51,6 +59,9 @@ class AutoAppsActivity : Activity() {
         root.addView(text(getString(R.string.auto_title), 22f, fg))
         root.addView(text(getString(R.string.auto_desc), 14f, dim).apply { setPadding(0, dp(6), 0, dp(12)) })
 
+        offer = buildOffer()
+        root.addView(offer)
+
         master = Switch(this).apply {
             text = getString(R.string.auto_enable)
             setTextColor(fg)
@@ -67,9 +78,10 @@ class AutoAppsActivity : Activity() {
         permBox = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         root.addView(permBox)
 
-        root.addView(text(getString(R.string.auto_pick), 14f, dim).apply { setPadding(0, dp(12), 0, dp(4)) })
+        pickLabel = text(getString(R.string.auto_pick), 14f, dim).apply { setPadding(0, dp(12), 0, dp(4)) }
+        root.addView(pickLabel)
 
-        val list = ListView(this).apply {
+        list = ListView(this).apply {
             this.adapter = this@AutoAppsActivity.adapter
             divider = null
             setOnItemClickListener { _, _, position, _ -> toggleApp(apps[position].pkg) }
@@ -82,13 +94,65 @@ class AutoAppsActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        Pro.addListener(proListener)
+        Pro.start(this)
         // the user may come back from a settings screen after granting a permission
+        render()
+    }
+
+    override fun onPause() {
+        Pro.removeListener(proListener)
+        super.onPause()
+    }
+
+    /** Locked: show the offer and grey out the settings. Unlocked: hide the offer. */
+    private fun render() {
+        val unlocked = Pro.isUnlocked(this)
+        offer.visibility = if (unlocked) View.GONE else View.VISIBLE
+        buyButton.text = Pro.price?.let { getString(R.string.pro_buy_price, it) } ?: getString(R.string.pro_buy)
+        for (v in listOf(master, pickLabel, list)) {
+            v.isEnabled = unlocked
+            v.alpha = if (unlocked) 1f else 0.4f
+        }
         refresh()
+    }
+
+    private fun buildOffer() = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        setPadding(dp(16), dp(14), dp(16), dp(16))
+        background = GradientDrawable().apply {
+            cornerRadius = dp(18).toFloat()
+            setColor(Color.parseColor("#26282C"))
+            setStroke(dp(2), Color.parseColor("#F5B700"))
+        }
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .apply { bottomMargin = dp(12) }
+        addView(text(getString(R.string.pro_title), 18f, fg).apply { setTypeface(typeface, Typeface.BOLD) })
+        addView(text(getString(R.string.pro_points), 14f, fg).apply {
+            setPadding(0, dp(8), 0, dp(12))
+            setLineSpacing(dp(4).toFloat(), 1f)
+        })
+        buyButton = text("", 16f, Color.WHITE).apply {
+            gravity = Gravity.CENTER
+            setTypeface(typeface, Typeface.BOLD)
+            setPadding(dp(12), dp(14), dp(12), dp(14))
+            background = GradientDrawable().apply {
+                cornerRadius = dp(14).toFloat()
+                orientation = GradientDrawable.Orientation.TOP_BOTTOM
+                colors = intArrayOf(Color.parseColor("#D24435"), Color.parseColor("#B03226"))
+            }
+            setOnClickListener {
+                if (!Pro.buy(this@AutoAppsActivity)) {
+                    Toast.makeText(this@AutoAppsActivity, R.string.pro_unavailable, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        addView(buyButton)
     }
 
     private fun refresh() {
         permBox.removeAllViews()
-        if (master.isChecked) {
+        if (master.isChecked && Pro.isUnlocked(this)) {
             if (!WatcherService.hasUsageAccess(this)) {
                 permBox.addView(action(getString(R.string.auto_need_usage)) {
                     startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
@@ -130,6 +194,7 @@ class AutoAppsActivity : Activity() {
     }
 
     private fun toggleApp(pkg: String) {
+        if (!Pro.isUnlocked(this)) return
         val chosen = HashSet(WatcherService.chosenApps(this))
         if (!chosen.add(pkg)) chosen.remove(pkg)
         WatcherService.prefs(this).edit().putStringSet(WatcherService.KEY_APPS, chosen).apply()

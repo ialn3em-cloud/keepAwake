@@ -66,7 +66,8 @@ class WatcherService : Service() {
 
         /** Start or stop the watcher to match the settings and permissions. */
         fun sync(context: Context) {
-            val wanted = prefs(context).getBoolean(KEY_ENABLED, false) &&
+            val wanted = Pro.isUnlocked(context) &&
+                prefs(context).getBoolean(KEY_ENABLED, false) &&
                 chosenApps(context).isNotEmpty() &&
                 hasUsageAccess(context) &&
                 Settings.canDrawOverlays(context)

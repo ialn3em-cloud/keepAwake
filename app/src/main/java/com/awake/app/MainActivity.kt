@@ -40,7 +40,7 @@ class MainActivity : Activity() {
 
         sw = SwitchView(this)
         sw.onToggle = { toggle() }
-        // the free build shows just the switch; the pro build adds the automatic apps card
+        // the switch, with the automatic apps (Pro) card under it
         content = ProEntry.wrap(this, sw)
         setContentView(content)
 
@@ -55,6 +55,7 @@ class MainActivity : Activity() {
         super.onResume()
         sw.setOn(AwakeService.running, false)
         ProEntry.refresh(content)
+        Pro.start(this)
         // the service can stop by itself (low battery, missing permission) or be toggled from the widget/tile
         AwakeService.onStateChanged = {
             if (sw.isOn != AwakeService.running) sw.setOn(AwakeService.running, true)

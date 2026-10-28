@@ -13,4 +13,26 @@
     <string name="a11y_off">Off</string>
     <string name="tile_on">On</string>
     <string name="tile_off">Off</string>
+
+    <string name="auto_title">Automatic apps</string>
+    <string name="auto_desc">The screen stays on by itself while one of these apps is open, without touching the switch.</string>
+    <string name="auto_enable">Turn on automatically</string>
+    <string name="auto_pick">Choose the apps</string>
+    <string name="auto_need_usage">Tap to allow Usage access, so the app knows which app is open</string>
+    <string name="auto_restricted">Usage access greyed out? Tap, then ⋮ → Allow restricted settings</string>
+    <string name="auto_need_battery">Tap and choose Allow, so it keeps working in the background</string>
+    <string name="auto_hide_notif">Hide the watching notification (tap, then turn it off). The feature keeps working</string>
+    <string name="pro_title">⭐ Screen Switch Pro</string>
+    <string name="pro_points">• The screen stays on by itself in the apps you choose\n• It goes back to normal when you leave them\n• One-time purchase, no subscription</string>
+    <string name="pro_buy">Upgrade to Pro</string>
+    <string name="pro_buy_price">Upgrade to Pro · %1$s</string>
+    <string name="pro_unavailable">Purchases work once the app is installed from Google Play</string>
+    <string name="auto_status_locked">Pro feature ⭐ · tap to see it</string>
+    <string name="auto_status_off">Off · tap to set up</string>
+    <plurals name="auto_status_on">
+        <item quantity="one">On · 1 app</item>
+        <item quantity="other">On · %d apps</item>
+    </plurals>
+    <string name="auto_notif_title">Watching your chosen apps</string>
+    <string name="auto_notif_text">Chosen apps: %1$d</string>
 </resources>

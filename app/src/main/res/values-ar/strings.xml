@@ -13,4 +13,30 @@
     <string name="a11y_off">متوقف</string>
     <string name="tile_on">مضاءة</string>
     <string name="tile_off">متوقف</string>
+
+    <string name="auto_title">التطبيقات التلقائية</string>
+    <string name="auto_desc">الشاشة تبقى مضاءة لوحدها ما دام أحد هذه التطبيقات مفتوحًا، بدون لمس المفتاح.</string>
+    <string name="auto_enable">التشغيل التلقائي</string>
+    <string name="auto_pick">اختر التطبيقات</string>
+    <string name="auto_need_usage">اضغط لتفعيل «الوصول إلى بيانات الاستخدام» ليعرف التطبيق أي تطبيق مفتوح</string>
+    <string name="auto_restricted">الخيار رمادي؟ اضغط هنا ثم ⋮ ← «السماح بالإعدادات المحظورة»</string>
+    <string name="auto_need_battery">اضغط واختر «سماح» حتى يستمر التطبيق بالعمل في الخلفية</string>
+    <string name="auto_hide_notif">إخفاء إشعار المراقبة: اضغط ثم أطفئه، والميزة تستمر بالعمل</string>
+    <string name="pro_title">⭐ مفتاح الشاشة برو</string>
+    <string name="pro_points">• الشاشة تبقى مضاءة لوحدها في التطبيقات اللي تختارها\n• ترجع طبيعية لما تطلع منها\n• شراء مرة واحدة، بدون اشتراك</string>
+    <string name="pro_buy">ترقية لبرو</string>
+    <string name="pro_buy_price">ترقية لبرو · %1$s</string>
+    <string name="pro_unavailable">الشراء يشتغل بعد تنزيل التطبيق من Google Play</string>
+    <string name="auto_status_locked">ميزة برو ⭐ · اضغط لتتعرف عليها</string>
+    <string name="auto_status_off">متوقف · اضغط للإعداد</string>
+    <plurals name="auto_status_on">
+        <item quantity="zero">مفعّل · لا توجد تطبيقات</item>
+        <item quantity="one">مفعّل · تطبيق واحد</item>
+        <item quantity="two">مفعّل · تطبيقان</item>
+        <item quantity="few">مفعّل · %d تطبيقات</item>
+        <item quantity="many">مفعّل · %d تطبيقًا</item>
+        <item quantity="other">مفعّل · %d تطبيق</item>
+    </plurals>
+    <string name="auto_notif_title">يراقب تطبيقاتك المختارة</string>
+    <string name="auto_notif_text">التطبيقات المختارة: %1$d</string>
 </resources>

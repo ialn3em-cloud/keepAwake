@@ -3,8 +3,9 @@
 3) أضف مفتاح التوقيع مرة واحدة فقط (الخطوة التالية)
 4) افتح تبويب Actions وانتظر انتهاء Build APK (3-5 دقائق)
 5) من قسم Artifacts نزّل:
-   ScreenSwitch-Free  ← النسخة المجانية (app-free-release.apk)
-   ScreenSwitch-Pro   ← النسخة المدفوعة، تطبيق منفصل (app-pro-release.apk)
+   ScreenSwitch       ← التطبيق (app-release.apk)، وبرو فيه يُفتح بالشراء من Google Play
+   ScreenSwitch-Test  ← نسخة تجربة لجوالك فقط، برو فيها مفتوح (لا ترفعها للمتجر)
+   GooglePlay-AAB     ← الملف الذي ترفعه على Google Play (app-release.aab)
 
 مفتاح التوقيع (مرة واحدة فقط):
 كل نسخة يجب أن تُوقَّع بنفس المفتاح، وإلا يرفض الجوال تثبيت التحديث فوق النسخة القديمة.

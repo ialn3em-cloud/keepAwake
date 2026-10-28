@@ -19,6 +19,8 @@ android {
         // grows with every GitHub build so each new APK installs over the previous one
         versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
         versionName = "1.${System.getenv("GITHUB_RUN_NUMBER") ?: "0"}"
+        // true only in the test build, so Pro can be tried before the app is on Google Play
+        buildConfigField("boolean", "PRO_ALWAYS", "false")
     }
 
     signingConfigs {
@@ -32,23 +34,19 @@ android {
         }
     }
 
-    // free = the current Screen Switch; pro = a separate app (own id and name) with automatic apps
-    flavorDimensions += "tier"
-    productFlavors {
-        create("free") {
-            dimension = "tier"
-        }
-        create("pro") {
-            dimension = "tier"
-            applicationIdSuffix = ".pro"
-            versionNameSuffix = "-pro"
-        }
-    }
+    buildFeatures { buildConfig = true }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             if (hasReleaseKey) signingConfig = signingConfigs.getByName("release")
+        }
+        // a separate app (own id and name) with Pro unlocked, for testing only; never upload it
+        create("unlocked") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".test"
+            versionNameSuffix = "-test"
+            buildConfigField("boolean", "PRO_ALWAYS", "true")
         }
     }
 
@@ -57,4 +55,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+}
+
+dependencies {
+    // Google Play in-app purchase for the Pro upgrade
+    implementation("com.android.billingclient:billing:8.0.0")
 }
