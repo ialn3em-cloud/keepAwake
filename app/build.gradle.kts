@@ -32,6 +32,23 @@ android {
         }
     }
 
+    buildFeatures { buildConfig = true }
+
+    // free = the current Screen Switch; pro = a separate app (own id and name) with automatic apps
+    flavorDimensions += "tier"
+    productFlavors {
+        create("free") {
+            dimension = "tier"
+            buildConfigField("boolean", "PRO", "false")
+        }
+        create("pro") {
+            dimension = "tier"
+            applicationIdSuffix = ".pro"
+            versionNameSuffix = "-pro"
+            buildConfigField("boolean", "PRO", "true")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false

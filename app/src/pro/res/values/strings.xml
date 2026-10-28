@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Screen Switch Pro</string>
+    <string name="auto_title">Automatic apps</string>
+    <string name="auto_desc">The screen stays on by itself while one of these apps is open, without touching the switch.</string>
+    <string name="auto_enable">Turn on automatically</string>
+    <string name="auto_pick">Choose the apps</string>
+    <string name="auto_need_usage">Tap to allow Usage access, so the app knows which app is open</string>
+    <string name="auto_restricted">Usage access greyed out? Tap, then ⋮ → Allow restricted settings</string>
+    <string name="auto_need_battery">Tap and set this app to Unrestricted battery, so it keeps working in the background</string>
+    <string name="auto_notif_title">Watching your chosen apps</string>
+    <string name="auto_notif_text">The screen stays on in %1$d chosen apps</string>
+</resources>

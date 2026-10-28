@@ -29,8 +29,12 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: gradle assembleRelease --no-daemon
+        run: gradle assembleFreeRelease assembleProRelease --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: KeepAwake-APK
-          path: app/build/outputs/apk/release/app-release.apk
+          name: ScreenSwitch-Free
+          path: app/build/outputs/apk/free/release/app-free-release.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ScreenSwitch-Pro
+          path: app/build/outputs/apk/pro/release/app-pro-release.apk

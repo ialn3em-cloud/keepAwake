@@ -11,6 +11,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Gravity
+import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 
 class MainActivity : Activity() {
@@ -39,13 +42,37 @@ class MainActivity : Activity() {
 
         sw = SwitchView(this)
         sw.onToggle = { toggle() }
-        setContentView(sw)
+        if (BuildConfig.PRO) setContentView(withProButton(sw)) else setContentView(sw)
 
         if (Build.VERSION.SDK_INT >= 33 &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
         }
+    }
+
+    // Pro only: a button under the switch that opens the automatic apps screen
+    private fun withProButton(content: android.view.View): FrameLayout {
+        val root = FrameLayout(this)
+        root.addView(content)
+        val button = TextView(this).apply {
+            setText(R.string.auto_open)
+            setTextColor(Color.parseColor("#E6E8EB"))
+            textSize = 16f
+            val pad = (12 * resources.displayMetrics.density).toInt()
+            setPadding(pad * 2, pad, pad * 2, pad)
+            setOnClickListener {
+                // the screen lives in the pro source set, so it is opened by name
+                startActivity(Intent().setClassName(this@MainActivity, "com.awake.app.AutoAppsActivity"))
+            }
+        }
+        val lp = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+            Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+        )
+        lp.bottomMargin = (24 * resources.displayMetrics.density).toInt()
+        root.addView(button, lp)
+        return root
     }
 
     override fun onResume() {
