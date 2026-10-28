@@ -11,7 +11,6 @@ import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import android.view.animation.OvershootInterpolator
 
 class SwitchView(context: Context) : View(context) {
 
@@ -25,7 +24,7 @@ class SwitchView(context: Context) : View(context) {
             invalidate()
         }
 
-    // mechanical position (overshoots a little as it snaps), light brightness, and finger pressure
+    // mechanical position, light brightness, and finger pressure
     private var m = 0f
     private var g = 0f
     private var press = 0f
@@ -88,8 +87,9 @@ class SwitchView(context: Context) : View(context) {
             return
         }
         mechAnim = ValueAnimator.ofFloat(m, target).apply {
-            duration = 240
-            interpolator = OvershootInterpolator(2.2f)
+            // a quick snap that settles at once, like a real rocker; no bounce
+            duration = 150
+            interpolator = DecelerateInterpolator(2.2f)
             addUpdateListener {
                 m = it.animatedValue as Float
                 invalidate()
@@ -148,12 +148,7 @@ class SwitchView(context: Context) : View(context) {
         }
         val plate = SwitchArt.fit(style, area)
         lastPlate.set(plate)
-        // the whole switch gives a little under the finger
-        val squeeze = 1f - 0.018f * press
-        c.save()
-        c.scale(squeeze, squeeze, plate.centerX(), plate.centerY())
-        hit.set(SwitchArt.draw(c, style, plate, m, g))
-        c.restore()
+        hit.set(SwitchArt.draw(c, style, plate, m, g, press))
 
         p.reset()
         p.isAntiAlias = true

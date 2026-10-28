@@ -12,8 +12,9 @@ import android.graphics.Shader
 
 /**
  * Draws each switch model into a given rectangle, for the app, the gallery and the widget alike.
- * Two values drive it, like a real switch: [m] is the mechanical position (0 off, 1 on, a little
- * past 1 or below 0 while it snaps), [g] is how bright its light is (0 dark, 1 fully lit).
+ * Two values drive it, like a real switch: [m] is the mechanical position (0 off, 1 on),
+ * [g] is how bright its light is (0 dark, 1 fully lit). [press] is the finger resting on it:
+ * the plate never moves, only the part you push sinks a little into it.
  */
 object SwitchArt {
 
@@ -106,7 +107,14 @@ object SwitchArt {
     }
 
     /** Draws the model; returns the part that should react to a tap. */
-    fun draw(c: Canvas, style: SwitchStyle, r: RectF, m: Float, g: Float): RectF = when (style) {
+    fun draw(c: Canvas, style: SwitchStyle, r: RectF, m: Float, g: Float, press: Float = 0f): RectF {
+        this.press = press
+        return drawStyle(c, style, r, m, g)
+    }
+
+    private var press = 0f
+
+    private fun drawStyle(c: Canvas, style: SwitchStyle, r: RectF, m: Float, g: Float): RectF = when (style) {
         SwitchStyle.CLASSIC -> classic(c, r, m, g)
         SwitchStyle.GOLD -> gold(c, r, m, g)
         SwitchStyle.GLASS -> glass(c, r, m, g)
@@ -319,7 +327,8 @@ object SwitchArt {
 
         val cx = f.centerX()
         val cy = f.centerY()
-        val kr = s * 0.26f * (1f - 0.02f * m) // pressed in a touch while on
+        // the knob sits in a touch while on, and further under the finger
+        val kr = s * 0.26f * (1f - 0.02f * m - 0.03f * press)
         spill(c, f, s * 0.12f, cx, cy, s * 0.5f, Color.rgb(47, 155, 255), g * 0.16f)
         reset().shader = android.graphics.RadialGradient(cx, cy - kr * 0.3f, kr * 1.2f,
             Color.parseColor("#3B3E43"), Color.parseColor("#222428"), Shader.TileMode.CLAMP)
@@ -392,9 +401,9 @@ object SwitchArt {
         reset().color = Color.parseColor("#151617")
         c.drawRoundRect(r(28f, 84f, w - 28f, 234f), 12 * k, 12 * k, p)
 
-        // a pressed button sits a little lower and darker
         fun button(rect: RectF, top: String, bottom: String, pressed: Float) {
-            rect.offset(0f, 3 * k * pressed)
+            // a pushed button sinks into its seat: a touch smaller and darker, it does not slide
+            rect.inset(1.2f * k * pressed, 1.2f * k * pressed)
             val dim = 1f - 0.2f * pressed
             fun shade(hex: String): Int {
                 val col = Color.parseColor(hex)
@@ -408,8 +417,9 @@ object SwitchArt {
         }
         val green = r(36f, 92f, w - 36f, 154f)
         val redB = r(36f, 158f, w - 36f, 220f)
-        button(green, "#3AC06A", "#1F8F48", m.coerceIn(0f, 1f))
-        button(redB, "#E5483B", "#B4271D", 1f - m.coerceIn(0f, 1f))
+        val mm = m.coerceIn(0f, 1f)
+        button(green, "#3AC06A", "#1F8F48", maxOf(mm, if (mm < 0.5f) press else 0f))
+        button(redB, "#E5483B", "#B4271D", maxOf(1f - mm, if (mm >= 0.5f) press else 0f))
         if (g > 0f) {
             reset().style = Paint.Style.STROKE
             p.strokeWidth = 2 * k
