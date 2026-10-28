@@ -9,5 +9,5 @@
     <string name="auto_restricted">الخيار رمادي؟ اضغط هنا ثم ⋮ ← «السماح بالإعدادات المحظورة»</string>
     <string name="auto_need_battery">اضغط واختر «سماح» حتى يستمر التطبيق بالعمل في الخلفية</string>
     <string name="auto_notif_title">يراقب تطبيقاتك المختارة</string>
-    <string name="auto_notif_text">الشاشة تبقى مضاءة في %1$d تطبيقات مختارة</string>
+    <string name="auto_notif_text">التطبيقات المختارة: %1$d</string>
 </resources>
