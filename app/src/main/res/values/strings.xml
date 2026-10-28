@@ -35,4 +35,12 @@
     </plurals>
     <string name="auto_notif_title">Watching your chosen apps</string>
     <string name="auto_notif_text">Chosen apps: %1$d</string>
+    <string name="timer_min">min</string>
+    <string name="timer_always">always</string>
+    <string name="timer_always_a11y">Timer: always on</string>
+    <string name="timer_left">Turns off in %1$s</string>
+    <plurals name="timer_minutes_a11y">
+        <item quantity="one">Timer: 1 minute</item>
+        <item quantity="other">Timer: %d minutes</item>
+    </plurals>
 </resources>

@@ -29,8 +29,22 @@ class AwakeService : Service() {
 
     companion object {
         const val ACTION_TOGGLE = "com.awake.app.TOGGLE"
+        const val ACTION_RESTART_TIMER = "com.awake.app.RESTART_TIMER"
+        private const val KEY_MINUTES = "timer_minutes"
         const val LOW_BATTERY = 10
         @Volatile var running = false
+
+        /** When the timer will turn the screen off (System.currentTimeMillis), or 0 when there is no timer. */
+        @Volatile var endAt = 0L
+
+        /** The chosen timer: 10, 15 or 30 minutes, or 0 for "always". Used wherever the switch is turned on. */
+        fun timerMinutes(context: Context): Int = settings(context).getInt(KEY_MINUTES, 0)
+
+        fun setTimerMinutes(context: Context, minutes: Int) {
+            settings(context).edit().putInt(KEY_MINUTES, minutes).apply()
+        }
+
+        private fun settings(context: Context) = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
         // set by MainActivity while it is on screen, so the switch follows the real state
         var onStateChanged: (() -> Unit)? = null
@@ -71,6 +85,7 @@ class AwakeService : Service() {
     private var wakeLock: PowerManager.WakeLock? = null
 
     private val handler = Handler(Looper.getMainLooper())
+    private val timerDone = Runnable { stopSelf() }
     private var pool: SoundPool? = null
     private var soundOn = 0
     private var soundOff = 0
@@ -140,6 +155,7 @@ class AwakeService : Service() {
             return
         }
         running = true
+        startTimer()
         notifyState(this)
         acquireWake()
 
@@ -203,8 +219,24 @@ class AwakeService : Service() {
         }
     }
 
+    /** (Re)start the countdown from the chosen duration; "always" just clears it. */
+    private fun startTimer() {
+        handler.removeCallbacks(timerDone)
+        val minutes = timerMinutes(this)
+        if (minutes > 0) {
+            val ms = minutes * 60_000L
+            endAt = System.currentTimeMillis() + ms
+            handler.postDelayed(timerDone, ms)
+        } else {
+            endAt = 0L
+        }
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.action == ACTION_TOGGLE) {
+        if (intent?.action == ACTION_RESTART_TIMER && running) {
+            // the user picked another duration while the switch is on
+            startTimer()
+        } else if (intent?.action == ACTION_TOGGLE) {
             if (!fresh) {
                 // the service was already running: this tap turns it off
                 playSound(soundOff)
@@ -222,6 +254,7 @@ class AwakeService : Service() {
 
     override fun onDestroy() {
         running = false
+        endAt = 0L
         releaseWake()
         handler.removeCallbacksAndMessages(null)
         pool?.release()

@@ -19,6 +19,14 @@ class SwitchView(context: Context) : View(context) {
 
     var onToggle: (() -> Unit)? = null
 
+    /** Time left on the timer, shown instead of the hint ("14:52"), or null when there is no timer. */
+    var countdown: String? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
+
     private var t = 0f
     var isOn = false
         private set
@@ -160,7 +168,8 @@ class SwitchView(context: Context) : View(context) {
         p.color = Color.parseColor("#8B9097")
         p.textSize = ph * 0.035f
         p.textAlign = Paint.Align.CENTER
-        val label = context.getString(if (isOn) R.string.hint_on else R.string.hint_off)
+        val label = countdown?.let { context.getString(R.string.timer_left, it) }
+            ?: context.getString(if (isOn) R.string.hint_on else R.string.hint_off)
         c.drawText(label, cx, top + ph * 0.9f, p)
     }
 

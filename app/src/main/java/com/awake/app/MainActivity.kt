@@ -10,13 +10,32 @@ import android.media.SoundPool
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
+import android.widget.LinearLayout
 import android.widget.Toast
 
 class MainActivity : Activity() {
 
     private lateinit var sw: SwitchView
     private lateinit var content: android.view.View
+    private lateinit var chips: TimerChips
+    private val ticker = Handler(Looper.getMainLooper())
+
+    // shows the time left on the switch once a second while the screen is open
+    private val tick = object : Runnable {
+        override fun run() {
+            val left = AwakeService.endAt - System.currentTimeMillis()
+            sw.countdown = if (AwakeService.running && AwakeService.endAt > 0 && left > 0) {
+                val s = (left + 999) / 1000
+                "%d:%02d".format(s / 60, s % 60)
+            } else {
+                null
+            }
+            ticker.postDelayed(this, 1000)
+        }
+    }
     private lateinit var pool: SoundPool
     private var soundOn = 0
     private var soundOff = 0
@@ -40,8 +59,16 @@ class MainActivity : Activity() {
 
         sw = SwitchView(this)
         sw.onToggle = { toggle() }
-        // the switch, with the automatic apps (Pro) card under it
-        content = ProEntry.wrap(this, sw)
+        chips = TimerChips(this)
+        chips.select(AwakeService.timerMinutes(this))
+        chips.onPick = { pickTimer(it) }
+        val column = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(sw, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+            addView(chips, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+        }
+        // the switch and the timer, with the automatic apps (Pro) card under them
+        content = ProEntry.wrap(this, column)
         setContentView(content)
 
         if (Build.VERSION.SDK_INT >= 33 &&
@@ -56,6 +83,7 @@ class MainActivity : Activity() {
         sw.setOn(AwakeService.running, false)
         ProEntry.refresh(content)
         Pro.start(this)
+        ticker.post(tick)
         // the service can stop by itself (low battery, missing permission) or be toggled from the widget/tile
         AwakeService.onStateChanged = {
             if (sw.isOn != AwakeService.running) sw.setOn(AwakeService.running, true)
@@ -63,6 +91,7 @@ class MainActivity : Activity() {
     }
 
     override fun onPause() {
+        ticker.removeCallbacks(tick)
         AwakeService.onStateChanged = null
         super.onPause()
     }
@@ -70,6 +99,16 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         pool.release()
         super.onDestroy()
+    }
+
+    private fun pickTimer(minutes: Int) {
+        AwakeService.setTimerMinutes(this, minutes)
+        chips.select(minutes)
+        Haptics.click(this)
+        if (AwakeService.running) {
+            // already on: count the new duration from now
+            startService(Intent(this, AwakeService::class.java).setAction(AwakeService.ACTION_RESTART_TIMER))
+        }
     }
 
     private fun feedback(on: Boolean) {

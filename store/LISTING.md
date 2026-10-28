@@ -47,6 +47,9 @@
 • من زر في الإشعارات السريعة
 • من ويدجت على الشاشة الرئيسية
 
+● مؤقت
+اختر 10 أو 15 أو 30 دقيقة، وترجع الشاشة تطفي لحالها بعدها. أو ∞ لتبقى مضاءة إلى أن تطفئها.
+
 ● يحمي بطاريتك
 يتوقف تلقائيًا إذا نزلت البطارية إلى 10% أو أقل والجوال غير موصول بالشاحن.
 
@@ -100,6 +103,9 @@ A red rocker switch with a light that glows when it is on, a click sound and a s
 • From the app
 • From a Quick Settings tile
 • From a home screen widget
+
+● Timer
+Pick 10, 15 or 30 minutes and the screen goes back to normal by itself. Or ∞ to keep it on until you turn it off.
 
 ● Protects your battery
 Turns itself off when the battery drops to 10% or less while not charging.

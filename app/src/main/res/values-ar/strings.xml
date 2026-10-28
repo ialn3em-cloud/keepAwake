@@ -39,4 +39,16 @@
     </plurals>
     <string name="auto_notif_title">يراقب تطبيقاتك المختارة</string>
     <string name="auto_notif_text">التطبيقات المختارة: %1$d</string>
+    <string name="timer_min">د</string>
+    <string name="timer_always">دائم</string>
+    <string name="timer_always_a11y">المؤقت: مضاءة دائمًا</string>
+    <string name="timer_left">يطفي بعد %1$s</string>
+    <plurals name="timer_minutes_a11y">
+        <item quantity="zero">المؤقت: %d دقيقة</item>
+        <item quantity="one">المؤقت: دقيقة واحدة</item>
+        <item quantity="two">المؤقت: دقيقتان</item>
+        <item quantity="few">المؤقت: %d دقائق</item>
+        <item quantity="many">المؤقت: %d دقيقة</item>
+        <item quantity="other">المؤقت: %d دقيقة</item>
+    </plurals>
 </resources>
