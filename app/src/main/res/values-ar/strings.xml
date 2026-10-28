@@ -11,7 +11,6 @@
     <string name="battery_low_start">البطارية %1$d%%، وصّل الشاحن لتشغيل المفتاح</string>
     <string name="a11y_on">مشغّل، الشاشة تبقى مضاءة</string>
     <string name="a11y_off">متوقف</string>
-    <string name="auto_open">⚙  التطبيقات التلقائية</string>
     <string name="tile_on">مضاءة</string>
     <string name="tile_off">متوقف</string>
 </resources>
