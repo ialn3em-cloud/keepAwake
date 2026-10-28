@@ -290,7 +290,9 @@ object SwitchArt {
             c.drawCircle(f.left + 85 * k, f.top + hy * k, 7.5f * k, p)
         }
         reset().color = Color.parseColor("#0C0D0E")
-        c.drawRoundRect(r(22f, 34f, w - 22f, 64f), 3 * k, 3 * k, p)
+        val screen = r(22f, 34f, w - 22f, 64f)
+        c.drawRoundRect(screen, 3 * k, 3 * k, p)
+        dotMatrix(c, screen, if (t > 0.5f) "ON" else "OFF")
 
         reset().shader = LinearGradient(0f, f.top + 74 * k, 0f, f.top + 244 * k,
             Color.parseColor("#FFCC33"), Color.parseColor("#E6A400"), Shader.TileMode.CLAMP)
@@ -348,6 +350,37 @@ object SwitchArt {
         c.drawRoundRect(cover, 12 * k, 12 * k, p)
 
         return r(12f, 74f, w - 12f, 244f)
+    }
+
+    // 5x7 dot-matrix letters for the factory model's little display
+    private val glyphs = mapOf(
+        'O' to arrayOf(".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."),
+        'N' to arrayOf("#...#", "##..#", "#.#.#", "#..##", "#...#", "#...#", "#...#"),
+        'F' to arrayOf("#####", "#....", "#....", "####.", "#....", "#....", "#....")
+    )
+
+    /** Red dots on a dark grid, like an old LCD: every dot is drawn, the letters' dots are lit. */
+    private fun dotMatrix(c: Canvas, screen: RectF, text: String) {
+        val pitch = screen.height() * 0.78f / 7f
+        val dot = pitch * 0.36f
+        val cols = (screen.width() / pitch).toInt() - 1
+        val ox = screen.centerX() - (cols - 1) * pitch / 2f
+        val oy = screen.centerY() - 3 * pitch
+        val textCols = text.length * 6 - 1
+        val start = (cols - textCols) / 2
+        val lit = Array(7) { BooleanArray(cols) }
+        text.forEachIndexed { i, ch ->
+            val g = glyphs[ch] ?: return@forEachIndexed
+            for (row in 0 until 7) for (col in 0 until 5) {
+                val x = start + i * 6 + col
+                if (g[row][col] == '#' && x in 0 until cols) lit[row][x] = true
+            }
+        }
+        for (row in 0 until 7) for (col in 0 until cols) {
+            reset().color = if (lit[row][col]) Color.parseColor("#FF3B30") else Color.parseColor("#2A1010")
+            if (lit[row][col]) p.setShadowLayer(dot * 1.6f, 0f, 0f, Color.argb(200, 255, 40, 30))
+            c.drawCircle(ox + col * pitch, oy + row * pitch, dot, p)
+        }
     }
 
     // white Carrara marble with grey and gold veins, a gold rocker and a light line
