@@ -71,10 +71,11 @@ object ProEntry {
         texts.addView(statusRow)
         card.addView(texts, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
 
-        // "›" is mirrored to point the right way in Arabic
+        // "›" points forward; in Arabic forward is to the left, so it is mirrored to "‹"
         card.addView(TextView(activity).apply {
             text = "›"
             textSize = 22f
+            textDirection = View.TEXT_DIRECTION_LOCALE
         })
 
         root.addView(card, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
