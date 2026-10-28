@@ -292,7 +292,7 @@ object SwitchArt {
         reset().color = Color.parseColor("#0C0D0E")
         val screen = r(22f, 34f, w - 22f, 64f)
         c.drawRoundRect(screen, 3 * k, 3 * k, p)
-        dotMatrix(c, screen, if (t > 0.5f) "ON" else "OFF")
+        dotMatrix(c, screen, if (t > 0.5f) "ON" else "OFF", on = t > 0.5f)
 
         reset().shader = LinearGradient(0f, f.top + 74 * k, 0f, f.top + 244 * k,
             Color.parseColor("#FFCC33"), Color.parseColor("#E6A400"), Shader.TileMode.CLAMP)
@@ -359,8 +359,8 @@ object SwitchArt {
         'F' to arrayOf("#####", "#....", "#....", "####.", "#....", "#....", "#....")
     )
 
-    /** Red dots on a dark grid, like an old LCD: every dot is drawn, the letters' dots are lit. */
-    private fun dotMatrix(c: Canvas, screen: RectF, text: String) {
+    /** Dots on a dark grid, like an old LCD: every dot is drawn, the letters' dots are lit (green ON, red OFF, like the button that is down). */
+    private fun dotMatrix(c: Canvas, screen: RectF, text: String, on: Boolean) {
         val pitch = screen.height() * 0.78f / 7f
         val dot = pitch * 0.36f
         val cols = (screen.width() / pitch).toInt() - 1
@@ -377,8 +377,12 @@ object SwitchArt {
             }
         }
         for (row in 0 until 7) for (col in 0 until cols) {
-            reset().color = if (lit[row][col]) Color.parseColor("#FF3B30") else Color.parseColor("#2A1010")
-            if (lit[row][col]) p.setShadowLayer(dot * 1.6f, 0f, 0f, Color.argb(200, 255, 40, 30))
+            reset().color = Color.parseColor(
+                if (lit[row][col]) (if (on) "#3DFF7A" else "#FF3B30") else (if (on) "#0E2414" else "#2A1010")
+            )
+            if (lit[row][col]) {
+                p.setShadowLayer(dot * 1.6f, 0f, 0f, if (on) Color.argb(200, 34, 255, 102) else Color.argb(200, 255, 40, 30))
+            }
             c.drawCircle(ox + col * pitch, oy + row * pitch, dot, p)
         }
     }
