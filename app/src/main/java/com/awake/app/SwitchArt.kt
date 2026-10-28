@@ -227,32 +227,68 @@ object SwitchArt {
         }
 
         // the dark recess the rocker sits in
-        val rec = RectF(x(0.115f), y(0.205f), x(0.885f), y(0.785f))
+        val rec = RectF(x(0.14f), y(0.215f), x(0.86f), y(0.785f))
         reset().color = Color.parseColor("#2B1D08")
         c.drawRect(rec, p)
         reset().style = Paint.Style.STROKE
-        p.strokeWidth = s * 0.008f
-        p.color = Color.argb(150, 150, 115, 55)
+        p.strokeWidth = s * 0.007f
+        p.color = Color.argb(140, 150, 115, 55)
         c.drawRect(rec, p)
 
-        // off: bottom edge pressed in (gap along the bottom), on: top edge pressed in
-        val rTop = y(0.215f + 0.04f * m)
-        val rBot = y(0.745f + 0.03f * m)
-        val rk = RectF(x(0.125f), rTop, x(0.86f), rBot)
-        val light = "#E9D6A8"
-        val dark = "#D2B883"
-        reset().shader = LinearGradient(0f, rk.top, 0f, rk.bottom,
-            mix(m, light, dark), mix(m, dark, light), Shader.TileMode.CLAMP)
-        c.drawRect(rk, p)
-        gloss(c, rk, 0f, 0.12f)
-        bevel(c, rk, 0f, s * 0.008f, light = 120, dark = 50)
+        // the rocker fills the recess; it tilts on a pivot across its middle, so one half faces up
+        // to the light and the other leans away (off: top half up, on: bottom half up)
+        val gap = s * 0.006f
+        val rk = RectF(rec.left + gap, rec.top + gap, rec.right - gap, rec.bottom - gap)
+        val mid = rk.centerY()
+        val upper = RectF(rk.left, rk.top, rk.right, mid)
+        val lower = RectF(rk.left, mid, rk.right, rk.bottom)
+        reset().shader = LinearGradient(0f, upper.top, 0f, upper.bottom,
+            mix(m, "#F0DFB4", "#D2B985"), mix(m, "#E7D2A3", "#DBC392"), Shader.TileMode.CLAMP)
+        c.drawRect(upper, p)
+        reset().shader = LinearGradient(0f, lower.top, 0f, lower.bottom,
+            mix(m, "#DCC593", "#E7D2A3"), mix(m, "#D1B886", "#F0DFB4"), Shader.TileMode.CLAMP)
+        c.drawRect(lower, p)
 
-        // light strip
+        // fine brushing on the rocker too
+        reset().strokeWidth = s * 0.003f
+        var bx = rk.left + s * 0.01f
+        var bi = 0
+        while (bx < rk.right) {
+            p.color = if (bi % 2 == 0) Color.argb(10, 255, 255, 255) else Color.argb(7, 0, 0, 0)
+            c.drawLine(bx, rk.top, bx, rk.bottom, p)
+            bx += s * 0.011f
+            bi++
+        }
+
+        // the pivot crease, a thin shadow where the low edge dips into the recess, darker sides
+        reset().strokeWidth = s * 0.004f
+        p.color = Color.argb(80, 255, 250, 230)
+        c.drawLine(rk.left, mid - s * 0.002f, rk.right, mid - s * 0.002f, p)
+        p.color = Color.argb(35, 0, 0, 0)
+        c.drawLine(rk.left, mid + s * 0.002f, rk.right, mid + s * 0.002f, p)
+        val sh = s * 0.02f
+        val down = (1f - m).coerceIn(0f, 1f)
+        reset().shader = LinearGradient(0f, rk.bottom - sh, 0f, rk.bottom,
+            Color.TRANSPARENT, Color.argb(alpha(down, 190), 43, 29, 8), Shader.TileMode.CLAMP)
+        c.drawRect(rk.left, rk.bottom - sh, rk.right, rk.bottom, p)
+        reset().shader = LinearGradient(0f, rk.top, 0f, rk.top + sh,
+            Color.argb(alpha(1f - down, 190), 43, 29, 8), Color.TRANSPARENT, Shader.TileMode.CLAMP)
+        c.drawRect(rk.left, rk.top, rk.right, rk.top + sh, p)
+        val sw = s * 0.012f
+        reset().shader = LinearGradient(rk.left, 0f, rk.left + sw, 0f,
+            Color.argb(40, 0, 0, 0), Color.TRANSPARENT, Shader.TileMode.CLAMP)
+        c.drawRect(rk.left, rk.top, rk.left + sw, rk.bottom, p)
+        reset().shader = LinearGradient(rk.right, 0f, rk.right - sw, 0f,
+            Color.argb(50, 0, 0, 0), Color.TRANSPARENT, Shader.TileMode.CLAMP)
+        c.drawRect(rk.right - sw, rk.top, rk.right, rk.bottom, p)
+        bevel(c, rk, 0f, s * 0.005f, light = 140, dark = 40)
+
+        // light strip near the top, its blue light spilling onto the gold around it
         val lw = s * 0.1f
-        val lh = s * 0.02f
-        val ly = rk.top + s * 0.07f
+        val lh = s * 0.018f
+        val ly = rk.top + s * 0.065f
         val led = RectF(rk.centerX() - lw / 2, ly, rk.centerX() + lw / 2, ly + lh)
-        spill(c, rk, 0f, led.centerX(), led.centerY(), s * 0.22f, Color.rgb(90, 210, 255), g * 0.22f)
+        spill(c, rk, 0f, led.centerX(), led.centerY(), s * 0.22f, Color.rgb(90, 210, 255), g * 0.2f)
         reset().color = mix(g, "#5E6A68", "#8FE9FF")
         if (g > 0f) p.setShadowLayer(s * 0.05f * g, 0f, 0f, Color.argb(alpha(g, 230), 60, 200, 255))
         c.drawRoundRect(led, lh / 2, lh / 2, p)
