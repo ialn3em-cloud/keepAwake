@@ -24,6 +24,8 @@ object ProEntry {
         val root = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundColor(Color.parseColor("#1B1C1F"))
+            // keep the card above the navigation bar
+            padForSystemBars()
         }
         // the switch takes the space left above the card, so the two never overlap
         root.addView(switchView, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))

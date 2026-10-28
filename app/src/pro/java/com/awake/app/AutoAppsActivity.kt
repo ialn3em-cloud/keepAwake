@@ -45,6 +45,7 @@ class AutoAppsActivity : Activity() {
             orientation = LinearLayout.VERTICAL
             setBackgroundColor(bg)
             setPadding(dp(16), dp(16), dp(16), 0)
+            padForSystemBars()
         }
 
         root.addView(text(getString(R.string.auto_title), 22f, fg))
