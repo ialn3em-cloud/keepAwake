@@ -63,4 +63,6 @@
     <string name="style_kids">Candy (kids)</string>
     <string name="style_black">Matte black</string>
     <string name="style_oak">Natural oak</string>
+    <string name="sound_on">Switch sound on. Tap to mute</string>
+    <string name="sound_off">Switch sound muted. Tap to turn it on</string>
 </resources>

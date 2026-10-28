@@ -39,6 +39,7 @@ class ClickSounds(context: Context) {
     }
 
     fun play(style: SwitchStyle, on: Boolean) {
+        if (!enabled(app)) return
         val id = idFor(res(style, on))
         if (id in loaded) pool.play(id, 1f, 1f, 1, 0, 1f) else pending = id
     }
@@ -46,6 +47,17 @@ class ClickSounds(context: Context) {
     fun release() = pool.release()
 
     private fun idFor(res: Int) = ids.getOrPut(res) { pool.load(app, res, 1) }
+
+    companion object {
+        private const val KEY = "click_sound"
+
+        /** The user can mute the switch clicks; the vibration stays. */
+        fun enabled(context: Context) =
+            context.getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean(KEY, true)
+
+        fun setEnabled(context: Context, on: Boolean) =
+            context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply()
+    }
 
     private fun res(style: SwitchStyle, on: Boolean): Int = when (style) {
         SwitchStyle.CLASSIC -> if (on) R.raw.switch_on else R.raw.switch_off

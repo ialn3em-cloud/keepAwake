@@ -71,4 +71,6 @@
     <string name="style_kids">الحلوى للأطفال</string>
     <string name="style_black">الأسود المطفي</string>
     <string name="style_oak">الخشب الطبيعي</string>
+    <string name="sound_on">صوت المفتاح مفعّل. اضغط للكتم</string>
+    <string name="sound_off">صوت المفتاح مكتوم. اضغط لتشغيله</string>
 </resources>

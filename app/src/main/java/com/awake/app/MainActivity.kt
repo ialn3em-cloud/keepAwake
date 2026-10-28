@@ -57,11 +57,14 @@ class MainActivity : Activity() {
             addView(sw, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
             addView(chips, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
-        // the switch and the timer, with the models button in the corner and the Pro card under them
+        // the switch and the timer, with the models and sound buttons in the corner and the Pro card under them
         val stage = FrameLayout(this).apply {
             addView(column)
             addView(stylesButton(), FrameLayout.LayoutParams(dp(44), dp(44), Gravity.TOP or Gravity.LEFT).apply {
                 setMargins(dp(16), dp(12), dp(16), dp(12))
+            })
+            addView(soundButton(), FrameLayout.LayoutParams(dp(44), dp(44), Gravity.TOP or Gravity.LEFT).apply {
+                setMargins(dp(16 + 44 + 10), dp(12), dp(16), dp(12))
             })
         }
         content = ProEntry.wrap(this, stage)
@@ -99,16 +102,34 @@ class MainActivity : Activity() {
         super.onDestroy()
     }
 
-    private fun stylesButton() = ImageView(this).apply {
+    private fun stylesButton() = roundButton().apply {
         setImageResource(R.drawable.ic_styles)
-        scaleType = ImageView.ScaleType.CENTER
         contentDescription = getString(R.string.styles_title)
+        setOnClickListener { startActivity(Intent(this@MainActivity, StylesActivity::class.java)) }
+    }
+
+    private fun soundButton() = roundButton().apply {
+        fun show() {
+            val on = ClickSounds.enabled(context)
+            setImageResource(if (on) R.drawable.ic_sound_on else R.drawable.ic_sound_off)
+            contentDescription = getString(if (on) R.string.sound_on else R.string.sound_off)
+        }
+        show()
+        setOnClickListener {
+            ClickSounds.setEnabled(context, !ClickSounds.enabled(context))
+            show()
+            Haptics.click(context)
+            announceForAccessibility(contentDescription)
+        }
+    }
+
+    private fun roundButton() = ImageView(this).apply {
+        scaleType = ImageView.ScaleType.CENTER
         background = GradientDrawable().apply {
             shape = GradientDrawable.OVAL
             setColor(Color.parseColor("#26282C"))
             setStroke(dp(1), Color.parseColor("#3A3D42"))
         }
-        setOnClickListener { startActivity(Intent(this@MainActivity, StylesActivity::class.java)) }
     }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
