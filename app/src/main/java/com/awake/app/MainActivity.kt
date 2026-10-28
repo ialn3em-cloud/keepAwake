@@ -54,6 +54,8 @@ class MainActivity : Activity() {
         chips.onPick = { pickTimer(it) }
         val column = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            // room for the corner buttons, so the switch never sits under them
+            setPadding(0, dp(12 + 44 + 4), 0, 0)
             addView(sw, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
             addView(chips, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
