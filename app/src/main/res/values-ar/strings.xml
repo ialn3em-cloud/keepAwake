@@ -65,4 +65,10 @@
     <string name="notif_extend">+10 د</string>
     <string name="notif_always">مضاءة دائمًا · بدون مؤقت</string>
     <string name="notif_until">يطفي بعد</string>
+    <string name="style_round">الزر الدائري</string>
+    <string name="style_factory">زر المصنع</string>
+    <string name="style_marble">الرخام الأبيض</string>
+    <string name="style_kids">الحلوى للأطفال</string>
+    <string name="style_black">الأسود المطفي</string>
+    <string name="style_oak">الخشب الطبيعي</string>
 </resources>

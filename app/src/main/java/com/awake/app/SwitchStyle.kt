@@ -6,7 +6,13 @@ import android.content.Context
 enum class SwitchStyle(val id: String, val pro: Boolean, val nameRes: Int, val aspect: Float) {
     CLASSIC("classic", false, R.string.style_classic, 0.61f),
     GOLD("gold", true, R.string.style_gold, 1f),
-    GLASS("glass", true, R.string.style_glass, 1f);
+    ROUND("round", true, R.string.style_round, 1f),
+    FACTORY("factory", true, R.string.style_factory, 170f / 280f),
+    MARBLE("marble", true, R.string.style_marble, 1f),
+    KIDS("kids", true, R.string.style_kids, 170f / 190f),
+    GLASS("glass", true, R.string.style_glass, 1f),
+    BLACK("black", true, R.string.style_black, 1f),
+    OAK("oak", true, R.string.style_oak, 1f);
 
     companion object {
         private const val KEY = "switch_style"

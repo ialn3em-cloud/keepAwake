@@ -57,4 +57,10 @@
     <string name="notif_extend">+10 min</string>
     <string name="notif_always">Always on · no timer</string>
     <string name="notif_until">Turns off in</string>
+    <string name="style_round">Round button</string>
+    <string name="style_factory">Factory button</string>
+    <string name="style_marble">White marble</string>
+    <string name="style_kids">Candy (kids)</string>
+    <string name="style_black">Matte black</string>
+    <string name="style_oak">Natural oak</string>
 </resources>

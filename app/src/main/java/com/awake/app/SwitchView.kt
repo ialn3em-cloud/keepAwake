@@ -28,6 +28,7 @@ class SwitchView(context: Context) : View(context) {
         private set
     private var anim: ValueAnimator? = null
     private val hit = RectF()
+    private val lastPlate = RectF()
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
     private val bg = Color.parseColor("#1B1C1F")
 
@@ -96,6 +97,7 @@ class SwitchView(context: Context) : View(context) {
             RectF(w * 0.12f, h * 0.08f, w * 0.88f, h * 0.82f)
         }
         val plate = SwitchArt.fit(style, area)
+        lastPlate.set(plate)
         hit.set(SwitchArt.draw(c, style, plate, t))
 
         p.reset()
@@ -117,7 +119,15 @@ class SwitchView(context: Context) : View(context) {
         when (e.action) {
             MotionEvent.ACTION_DOWN -> return true
             MotionEvent.ACTION_UP -> {
-                if (hit.contains(e.x, e.y)) performClick()
+                if (hit.contains(e.x, e.y)) {
+                    if (style == SwitchStyle.FACTORY) {
+                        // green turns it on, red turns it off; pressing the one already down does nothing
+                        val wantOn = e.y < SwitchArt.factorySplit(lastPlate)
+                        if (wantOn != isOn) performClick()
+                    } else {
+                        performClick()
+                    }
+                }
                 return true
             }
         }
