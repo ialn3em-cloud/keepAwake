@@ -36,6 +36,16 @@ class WatcherService : Service() {
         const val KEY_ENABLED = "enabled"
         const val KEY_APPS = "apps"
         private const val TICK_MS = 1500L
+        const val CHANNEL_ID = "watch"
+
+        /** The channel of the "watching your apps" notification, so the user can hide it in settings. */
+        fun ensureChannel(context: Context): NotificationChannel {
+            val manager = context.getSystemService(NotificationManager::class.java)
+            manager.getNotificationChannel(CHANNEL_ID)?.let { return it }
+            val channel = NotificationChannel(CHANNEL_ID, context.getString(R.string.auto_title), NotificationManager.IMPORTANCE_MIN)
+            manager.createNotificationChannel(channel)
+            return channel
+        }
 
         fun prefs(context: Context): SharedPreferences =
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -92,15 +102,12 @@ class WatcherService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        val channelId = "watch"
-        getSystemService(NotificationManager::class.java).createNotificationChannel(
-            NotificationChannel(channelId, getString(R.string.auto_title), NotificationManager.IMPORTANCE_MIN)
-        )
+        ensureChannel(this)
         val open = PendingIntent.getActivity(
             this, 1, Intent(this, AutoAppsActivity::class.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val notification = Notification.Builder(this, channelId)
+        val notification = Notification.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.auto_notif_title))
             .setContentText(getString(R.string.auto_notif_text, chosenApps(this).size))
             .setSmallIcon(android.R.drawable.ic_menu_view)

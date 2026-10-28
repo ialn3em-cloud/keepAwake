@@ -8,6 +8,7 @@
     <string name="auto_need_usage">اضغط لتفعيل «الوصول إلى بيانات الاستخدام» ليعرف التطبيق أي تطبيق مفتوح</string>
     <string name="auto_restricted">الخيار رمادي؟ اضغط هنا ثم ⋮ ← «السماح بالإعدادات المحظورة»</string>
     <string name="auto_need_battery">اضغط واختر «سماح» حتى يستمر التطبيق بالعمل في الخلفية</string>
+    <string name="auto_hide_notif">إخفاء إشعار المراقبة: اضغط ثم أطفئه، والميزة تستمر بالعمل</string>
     <string name="auto_notif_title">يراقب تطبيقاتك المختارة</string>
     <string name="auto_notif_text">التطبيقات المختارة: %1$d</string>
 </resources>

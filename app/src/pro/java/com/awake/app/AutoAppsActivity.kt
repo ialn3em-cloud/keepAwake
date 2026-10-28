@@ -1,6 +1,7 @@
 package com.awake.app
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -113,6 +114,16 @@ class AutoAppsActivity : Activity() {
                     }
                 })
             }
+            // Android requires the notification while watching; the user may still hide it
+            if (WatcherService.ensureChannel(this).importance != NotificationManager.IMPORTANCE_NONE) {
+                permBox.addView(action(getString(R.string.auto_hide_notif), warning = false) {
+                    startActivity(
+                        Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                            .putExtra(Settings.EXTRA_CHANNEL_ID, WatcherService.CHANNEL_ID)
+                    )
+                })
+            }
         }
         WatcherService.sync(this)
     }
@@ -178,14 +189,15 @@ class AutoAppsActivity : Activity() {
         setTextColor(color)
     }
 
-    private fun action(s: String, onClick: () -> Unit) = text("⚠  $s", 14f, accent).apply {
-        setPadding(dp(12), dp(10), dp(12), dp(10))
-        setBackgroundColor(Color.parseColor("#2A1A1A"))
-        val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        lp.topMargin = dp(6)
-        layoutParams = lp
-        setOnClickListener { onClick() }
-    }
+    private fun action(s: String, warning: Boolean = true, onClick: () -> Unit) =
+        text(if (warning) "⚠  $s" else "🔕  $s", 14f, if (warning) accent else fg).apply {
+            setPadding(dp(12), dp(10), dp(12), dp(10))
+            setBackgroundColor(Color.parseColor(if (warning) "#2A1A1A" else "#26282C"))
+            val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            lp.topMargin = dp(6)
+            layoutParams = lp
+            setOnClickListener { onClick() }
+        }
 
     private fun dp(v: Int) =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()

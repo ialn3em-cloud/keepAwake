@@ -8,6 +8,7 @@
     <string name="auto_need_usage">Tap to allow Usage access, so the app knows which app is open</string>
     <string name="auto_restricted">Usage access greyed out? Tap, then ⋮ → Allow restricted settings</string>
     <string name="auto_need_battery">Tap and choose Allow, so it keeps working in the background</string>
+    <string name="auto_hide_notif">Hide the watching notification (tap, then turn it off). The feature keeps working</string>
     <string name="auto_notif_title">Watching your chosen apps</string>
     <string name="auto_notif_text">Chosen apps: %1$d</string>
 </resources>
