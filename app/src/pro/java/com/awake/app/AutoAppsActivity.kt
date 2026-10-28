@@ -103,7 +103,14 @@ class AutoAppsActivity : Activity() {
             }
             if (!getSystemService(PowerManager::class.java).isIgnoringBatteryOptimizations(packageName)) {
                 permBox.addView(action(getString(R.string.auto_need_battery)) {
-                    startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+                    // Android's own "let app always run in background?" dialog; some phones lack it
+                    try {
+                        startActivity(
+                            Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName"))
+                        )
+                    } catch (_: Exception) {
+                        startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+                    }
                 })
             }
         }

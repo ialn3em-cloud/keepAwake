@@ -7,7 +7,7 @@
     <string name="auto_pick">Choose the apps</string>
     <string name="auto_need_usage">Tap to allow Usage access, so the app knows which app is open</string>
     <string name="auto_restricted">Usage access greyed out? Tap, then ⋮ → Allow restricted settings</string>
-    <string name="auto_need_battery">Tap and set this app to Unrestricted battery, so it keeps working in the background</string>
+    <string name="auto_need_battery">Tap and choose Allow, so it keeps working in the background</string>
     <string name="auto_notif_title">Watching your chosen apps</string>
     <string name="auto_notif_text">The screen stays on in %1$d chosen apps</string>
 </resources>
