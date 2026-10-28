@@ -5,8 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.media.AudioAttributes
-import android.media.SoundPool
 import android.net.Uri
 import android.os.Build
 import android.graphics.drawable.GradientDrawable
@@ -40,26 +38,14 @@ class MainActivity : Activity() {
             ticker.postDelayed(this, 1000)
         }
     }
-    private lateinit var pool: SoundPool
-    private var soundOn = 0
-    private var soundOff = 0
+    private lateinit var sounds: ClickSounds
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.parseColor("#1B1C1F")
         window.navigationBarColor = Color.parseColor("#1B1C1F")
 
-        pool = SoundPool.Builder()
-            .setMaxStreams(2)
-            .setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build()
-            )
-            .build()
-        soundOn = pool.load(this, R.raw.switch_on, 1)
-        soundOff = pool.load(this, R.raw.switch_off, 1)
+        sounds = ClickSounds(this)
 
         sw = SwitchView(this)
         sw.onToggle = { toggle() }
@@ -92,6 +78,7 @@ class MainActivity : Activity() {
         super.onResume()
         sw.setOn(AwakeService.running, false)
         sw.style = SwitchStyle.current(this)
+        sounds.preload(sw.style)
         ProEntry.refresh(content)
         Pro.start(this)
         ticker.post(tick)
@@ -108,7 +95,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
-        pool.release()
+        sounds.release()
         super.onDestroy()
     }
 
@@ -137,7 +124,7 @@ class MainActivity : Activity() {
     }
 
     private fun feedback(on: Boolean) {
-        pool.play(if (on) soundOn else soundOff, 1f, 1f, 1, 0, 1f)
+        sounds.play(SwitchStyle.current(this), on)
         Haptics.click(this)
     }
 

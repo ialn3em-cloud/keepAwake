@@ -13,7 +13,7 @@
 |---|---|
 | App icon (512×512) | `icon-512.png` |
 | Feature graphic (1024×500) | `feature-graphic.png` |
-| Phone screenshots، بالترتيب | `screen-1.png` إلى `screen-7.png` (الصور 3 و4 و5 خاصة ببرو، وعليها شارة «برو ⭐») |
+| Phone screenshots، بالترتيب | `screen-1.png` إلى `screen-8.png` (الصور 3 و4 و5 خاصة ببرو، وعليها شارة «برو ⭐») |
 
 ---
 
@@ -53,6 +53,9 @@
 ● يحمي بطاريتك
 يتوقف تلقائيًا إذا نزلت البطارية إلى 10% أو أقل والجوال غير موصول بالشاحن.
 
+● أوقفه من شاشة القفل
+إشعار فيه عد تنازلي حي، وزر «إيقاف»، وزر «+10 د» لتمديد المؤقت، بدون ما تفتح الجوال.
+
 ● خصوصيتك أولًا
 لا يطلب صلاحية الإنترنت، بدون إعلانات، ولا يجمع أي بيانات.
 
@@ -62,7 +65,11 @@
 ● التطبيقات التلقائية
 اختر تطبيقاتك، مثل الملاحظات أو الخرائط أو تطبيق الوصفات، والشاشة تبقى مضاءة لوحدها ما دام أحدها مفتوحًا، بدون أن تلمس المفتاح. تخرج منه؟ ترجع الشاشة لوضعها الطبيعي.
 
-• الصور التي عليها شارة «برو ⭐» تعرض هذه الميزة.
+● 8 موديلات إضافية للمفتاح
+الذهبي الفاخر، الرخام الأبيض، الخشب الطبيعي، اللمس الزجاجي، الأسود المطفي، الزر الدائري، زر المصنع، والحلوى للأطفال. لكل موديل حركته وإضاءته، والويدجت يتبع الموديل الذي تختاره.
+
+• الصور التي عليها شارة «برو ⭐» تعرض هذه المزايا.
+• الكلاسيكي الأحمر مجاني للجميع.
 • تدفع مرة واحدة فقط من داخل التطبيق عن طريق Google Play، بدون اشتراك شهري.
 • تقدر تشوف الميزة داخل التطبيق قبل ما تقرر تشتري.
 • كل ما في قسم «مجانًا للجميع» يبقى مجانيًا دائمًا.
@@ -110,6 +117,9 @@ Pick 10, 15 or 30 minutes and the screen goes back to normal by itself. Or ∞ t
 ● Protects your battery
 Turns itself off when the battery drops to 10% or less while not charging.
 
+● Stop it from the lock screen
+A notification with a live countdown, a Stop button and +10 min, without unlocking the phone.
+
 ● Private by design
 No internet permission, no ads, and no data collected.
 
@@ -119,7 +129,11 @@ No internet permission, no ads, and no data collected.
 ● Automatic apps
 Choose your apps, like notes, maps or a recipe app, and the screen stays on by itself while one of them is open, without touching the switch. Leave the app and the screen goes back to normal.
 
-• Screenshots marked "Pro ⭐" show this feature.
+● 8 more switch models
+Luxury gold, white marble, natural oak, smart glass, matte black, round button, factory button and candy for kids. Each moves and lights up in its own way, and the widget follows the model you pick.
+
+• Screenshots marked "Pro ⭐" show these extras.
+• The classic red switch is free for everyone.
 • Pay once inside the app through Google Play. No monthly subscription.
 • You can see the feature in the app before deciding to buy.
 • Everything under "Free for everyone" stays free, always.

@@ -31,10 +31,12 @@ class StylesActivity : Activity() {
     private val cards = mutableMapOf<SwitchStyle, LinearLayout>()
     private var picked = SwitchStyle.CLASSIC
     private val proListener: () -> Unit = { render() }
+    private lateinit var sounds: ClickSounds
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         picked = SwitchStyle.current(this)
+        sounds = ClickSounds(this)
 
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -61,6 +63,7 @@ class StylesActivity : Activity() {
             // the preview only plays the switch; it does not touch the real one
             onToggle = {
                 setOn(!isOn, true)
+                sounds.play(style, isOn)
                 Haptics.click(this@StylesActivity)
             }
         }
@@ -112,6 +115,11 @@ class StylesActivity : Activity() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        sounds.release()
+        super.onDestroy()
+    }
+
     private fun buildCard(style: SwitchStyle) = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
@@ -138,6 +146,7 @@ class StylesActivity : Activity() {
         contentDescription = getString(style.nameRes)
         setOnClickListener {
             picked = style
+            sounds.preload(style)
             preview.style = style
             preview.setOn(true, false)
             render()

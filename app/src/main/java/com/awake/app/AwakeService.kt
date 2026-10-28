@@ -12,8 +12,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
-import android.media.AudioAttributes
-import android.media.SoundPool
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
@@ -89,11 +87,7 @@ class AwakeService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val timerDone = Runnable { stopSelf() }
-    private var pool: SoundPool? = null
-    private var soundOn = 0
-    private var soundOff = 0
-    private var pendingSound = 0
-    private val loadedSounds = mutableSetOf<Int>()
+    private var sounds: ClickSounds? = null
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -109,7 +103,7 @@ class AwakeService : Service() {
     override fun onCreate() {
         super.onCreate()
         fresh = true
-        initSounds()
+        sounds = ClickSounds(this).also { it.preload(SwitchStyle.current(this)) }
 
         getSystemService(NotificationManager::class.java).createNotificationChannel(
             NotificationChannel(CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW)
@@ -178,37 +172,8 @@ class AwakeService : Service() {
         wakeLock = null
     }
 
-    private fun initSounds() {
-        val p = SoundPool.Builder()
-            .setMaxStreams(1)
-            .setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build()
-            )
-            .build()
-        p.setOnLoadCompleteListener { sp, id, status ->
-            if (status == 0) {
-                loadedSounds.add(id)
-                if (id == pendingSound) {
-                    sp.play(id, 1f, 1f, 1, 0, 1f)
-                    pendingSound = 0
-                }
-            }
-        }
-        soundOn = p.load(this, R.raw.switch_on, 1)
-        soundOff = p.load(this, R.raw.switch_off, 1)
-        pool = p
-    }
-
-    private fun playSound(id: Int) {
-        val p = pool ?: return
-        if (loadedSounds.contains(id)) {
-            p.play(id, 1f, 1f, 1, 0, 1f)
-        } else {
-            pendingSound = id
-        }
+    private fun playSound(on: Boolean) {
+        sounds?.play(SwitchStyle.current(this), on)
     }
 
     /** (Re)start the countdown from the chosen duration; "always" just clears it. */
@@ -259,7 +224,7 @@ class AwakeService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
-            playSound(soundOff)
+            playSound(false)
             Haptics.click(this)
             handler.postDelayed({ stopSelf() }, 300)
         } else if (intent?.action == ACTION_EXTEND && running) {
@@ -271,12 +236,12 @@ class AwakeService : Service() {
         } else if (intent?.action == ACTION_TOGGLE) {
             if (!fresh) {
                 // the service was already running: this tap turns it off
-                playSound(soundOff)
+                playSound(false)
                 Haptics.click(this)
                 handler.postDelayed({ stopSelf() }, 300)
             } else if (running) {
                 // the service was just created by this tap: it is turning on
-                playSound(soundOn)
+                playSound(true)
                 Haptics.click(this)
             }
         }
@@ -289,8 +254,8 @@ class AwakeService : Service() {
         endAt = 0L
         releaseWake()
         handler.removeCallbacksAndMessages(null)
-        pool?.release()
-        pool = null
+        sounds?.release()
+        sounds = null
         if (batteryRegistered) {
             try { unregisterReceiver(batteryReceiver) } catch (_: Exception) {}
             batteryRegistered = false
