@@ -10,6 +10,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 
 class SwitchView(context: Context) : View(context) {
 
@@ -23,10 +25,15 @@ class SwitchView(context: Context) : View(context) {
             invalidate()
         }
 
-    private var t = 0f
+    // mechanical position (overshoots a little as it snaps), light brightness, and finger pressure
+    private var m = 0f
+    private var g = 0f
+    private var press = 0f
+    private var mechAnim: ValueAnimator? = null
+    private var lightAnim: ValueAnimator? = null
+    private var pressAnim: ValueAnimator? = null
     var isOn = false
         private set
-    private var anim: ValueAnimator? = null
     private val hit = RectF()
     private val lastPlate = RectF()
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -63,21 +70,64 @@ class SwitchView(context: Context) : View(context) {
         info.isChecked = isOn
     }
 
+    /**
+     * Like a real switch: the rocker snaps over with a small bounce, the light comes on a moment
+     * after the contact closes (each model in its own way: flicker, blink, sweep), and fades out
+     * gently when it is turned off.
+     */
     fun setOn(on: Boolean, animate: Boolean) {
         isOn = on
         updateDescription()
         val target = if (on) 1f else 0f
-        anim?.cancel()
+        mechAnim?.cancel()
+        lightAnim?.cancel()
         if (!animate) {
-            t = target
+            m = target
+            g = target
             invalidate()
             return
         }
-        anim = ValueAnimator.ofFloat(t, target).apply {
-            duration = 160
+        mechAnim = ValueAnimator.ofFloat(m, target).apply {
+            duration = 240
+            interpolator = OvershootInterpolator(2.2f)
+            addUpdateListener {
+                m = it.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+        lightAnim = if (on) {
+            val (profile, length) = SwitchArt.ignition(style)
+            ValueAnimator.ofFloat(0f, 1f).apply {
+                startDelay = 90
+                duration = length
+                interpolator = LinearInterpolator()
+                addUpdateListener {
+                    g = SwitchArt.sample(profile, it.animatedValue as Float)
+                    invalidate()
+                }
+                start()
+            }
+        } else {
+            ValueAnimator.ofFloat(g, 0f).apply {
+                duration = 340
+                interpolator = DecelerateInterpolator(1.6f)
+                addUpdateListener {
+                    g = it.animatedValue as Float
+                    invalidate()
+                }
+                start()
+            }
+        }
+    }
+
+    private fun animatePress(to: Float) {
+        pressAnim?.cancel()
+        pressAnim = ValueAnimator.ofFloat(press, to).apply {
+            duration = if (to > 0f) 70 else 140
             interpolator = DecelerateInterpolator()
             addUpdateListener {
-                t = it.animatedValue as Float
+                press = it.animatedValue as Float
                 invalidate()
             }
             start()
@@ -98,7 +148,12 @@ class SwitchView(context: Context) : View(context) {
         }
         val plate = SwitchArt.fit(style, area)
         lastPlate.set(plate)
-        hit.set(SwitchArt.draw(c, style, plate, t))
+        // the whole switch gives a little under the finger
+        val squeeze = 1f - 0.018f * press
+        c.save()
+        c.scale(squeeze, squeeze, plate.centerX(), plate.centerY())
+        hit.set(SwitchArt.draw(c, style, plate, m, g))
+        c.restore()
 
         p.reset()
         p.isAntiAlias = true
@@ -117,8 +172,16 @@ class SwitchView(context: Context) : View(context) {
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
         when (e.action) {
-            MotionEvent.ACTION_DOWN -> return true
+            MotionEvent.ACTION_DOWN -> {
+                if (hit.contains(e.x, e.y)) animatePress(1f)
+                return true
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                animatePress(0f)
+                return true
+            }
             MotionEvent.ACTION_UP -> {
+                animatePress(0f)
                 if (hit.contains(e.x, e.y)) {
                     if (style == SwitchStyle.FACTORY) {
                         // green turns it on, red turns it off; pressing the one already down does nothing
