@@ -23,7 +23,7 @@
     <string name="auto_need_battery">اضغط واختر «سماح» حتى يستمر التطبيق بالعمل في الخلفية</string>
     <string name="auto_hide_notif">إخفاء إشعار المراقبة: اضغط ثم أطفئه، والميزة تستمر بالعمل</string>
     <string name="pro_title">⭐ مفتاح الشاشة برو</string>
-    <string name="pro_points">• الشاشة تبقى مضاءة لوحدها في التطبيقات اللي تختارها\n• ترجع طبيعية لما تطلع منها\n• شراء مرة واحدة، بدون اشتراك</string>
+    <string name="pro_points">• الشاشة تبقى مضاءة لوحدها في التطبيقات اللي تختارها\n• ترجع طبيعية لما تطلع منها\n• موديلات فاخرة للمفتاح والويدجت\n• شراء مرة واحدة، بدون اشتراك</string>
     <string name="pro_buy">ترقية لبرو</string>
     <string name="pro_buy_price">ترقية لبرو · %1$s</string>
     <string name="pro_unavailable">الشراء يشتغل بعد تنزيل التطبيق من Google Play</string>
@@ -51,4 +51,18 @@
         <item quantity="many">المؤقت: %d دقيقة</item>
         <item quantity="other">المؤقت: %d دقيقة</item>
     </plurals>
+    <string name="style_classic">الكلاسيكي الأحمر</string>
+    <string name="style_gold">الذهبي الفاخر</string>
+    <string name="style_glass">اللمس الزجاجي</string>
+    <string name="styles_title">اختر مفتاحك</string>
+    <string name="styles_hint">اضغط أي موديل لتشوفه، واضغط المعاينة لتجربه</string>
+    <string name="styles_free">مجاني</string>
+    <string name="styles_pro">برو ⭐</string>
+    <string name="styles_locked">🔒 برو</string>
+    <string name="styles_use">استخدم هذا المفتاح</string>
+    <string name="styles_in_use">✓ مستخدم الآن</string>
+    <string name="notif_stop">إيقاف</string>
+    <string name="notif_extend">+10 د</string>
+    <string name="notif_always">مضاءة دائمًا · بدون مؤقت</string>
+    <string name="notif_until">يطفي بعد</string>
 </resources>

@@ -23,7 +23,7 @@
     <string name="auto_need_battery">Tap and choose Allow, so it keeps working in the background</string>
     <string name="auto_hide_notif">Hide the watching notification (tap, then turn it off). The feature keeps working</string>
     <string name="pro_title">⭐ Screen Switch Pro</string>
-    <string name="pro_points">• The screen stays on by itself in the apps you choose\n• It goes back to normal when you leave them\n• One-time purchase, no subscription</string>
+    <string name="pro_points">• The screen stays on by itself in the apps you choose\n• It goes back to normal when you leave them\n• Premium switch models for the app and the widget\n• One-time purchase, no subscription</string>
     <string name="pro_buy">Upgrade to Pro</string>
     <string name="pro_buy_price">Upgrade to Pro · %1$s</string>
     <string name="pro_unavailable">Purchases work once the app is installed from Google Play</string>
@@ -43,4 +43,18 @@
         <item quantity="one">Timer: 1 minute</item>
         <item quantity="other">Timer: %d minutes</item>
     </plurals>
+    <string name="style_classic">Classic red</string>
+    <string name="style_gold">Luxury gold</string>
+    <string name="style_glass">Smart glass</string>
+    <string name="styles_title">Choose your switch</string>
+    <string name="styles_hint">Tap a model to see it, tap the preview to switch it</string>
+    <string name="styles_free">Free</string>
+    <string name="styles_pro">Pro ⭐</string>
+    <string name="styles_locked">🔒 Pro</string>
+    <string name="styles_use">Use this switch</string>
+    <string name="styles_in_use">✓ In use</string>
+    <string name="notif_stop">Stop</string>
+    <string name="notif_extend">+10 min</string>
+    <string name="notif_always">Always on · no timer</string>
+    <string name="notif_until">Turns off in</string>
 </resources>

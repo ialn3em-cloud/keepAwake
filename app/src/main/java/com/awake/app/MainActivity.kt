@@ -9,10 +9,14 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 import android.net.Uri
 import android.os.Build
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.view.Gravity
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 
@@ -67,8 +71,14 @@ class MainActivity : Activity() {
             addView(sw, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
             addView(chips, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
-        // the switch and the timer, with the automatic apps (Pro) card under them
-        content = ProEntry.wrap(this, column)
+        // the switch and the timer, with the models button in the corner and the Pro card under them
+        val stage = FrameLayout(this).apply {
+            addView(column)
+            addView(stylesButton(), FrameLayout.LayoutParams(dp(44), dp(44), Gravity.TOP or Gravity.LEFT).apply {
+                setMargins(dp(16), dp(12), dp(16), dp(12))
+            })
+        }
+        content = ProEntry.wrap(this, stage)
         setContentView(content)
 
         if (Build.VERSION.SDK_INT >= 33 &&
@@ -81,6 +91,7 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         sw.setOn(AwakeService.running, false)
+        sw.style = SwitchStyle.current(this)
         ProEntry.refresh(content)
         Pro.start(this)
         ticker.post(tick)
@@ -100,6 +111,20 @@ class MainActivity : Activity() {
         pool.release()
         super.onDestroy()
     }
+
+    private fun stylesButton() = ImageView(this).apply {
+        setImageResource(R.drawable.ic_styles)
+        scaleType = ImageView.ScaleType.CENTER
+        contentDescription = getString(R.string.styles_title)
+        background = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(Color.parseColor("#26282C"))
+            setStroke(dp(1), Color.parseColor("#3A3D42"))
+        }
+        setOnClickListener { startActivity(Intent(this@MainActivity, StylesActivity::class.java)) }
+    }
+
+    private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
     private fun pickTimer(minutes: Int) {
         AwakeService.setTimerMinutes(this, minutes)

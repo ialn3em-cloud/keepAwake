@@ -17,9 +17,10 @@ class SwitchWidget : AppWidgetProvider() {
     companion object {
         fun build(context: Context): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.widget)
-            views.setImageViewResource(
+            // drawn with the same code as the app, so the widget always matches the chosen model
+            views.setImageViewBitmap(
                 R.id.widget_img,
-                if (AwakeService.running) R.drawable.widget_on else R.drawable.widget_off
+                SwitchArt.bitmap(SwitchStyle.current(context), AwakeService.running, 320)
             )
             val intent = Intent(context, AwakeService::class.java).setAction(AwakeService.ACTION_TOGGLE)
             val pending = PendingIntent.getForegroundService(

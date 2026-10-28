@@ -30,6 +30,9 @@ class AwakeService : Service() {
     companion object {
         const val ACTION_TOGGLE = "com.awake.app.TOGGLE"
         const val ACTION_RESTART_TIMER = "com.awake.app.RESTART_TIMER"
+        private const val ACTION_STOP = "com.awake.app.STOP"
+        private const val ACTION_EXTEND = "com.awake.app.EXTEND"
+        private const val CHANNEL_ID = "awake"
         private const val KEY_MINUTES = "timer_minutes"
         const val LOW_BATTERY = 10
         @Volatile var running = false
@@ -108,21 +111,10 @@ class AwakeService : Service() {
         fresh = true
         initSounds()
 
-        val channelId = "awake"
         getSystemService(NotificationManager::class.java).createNotificationChannel(
-            NotificationChannel(channelId, getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW)
+            NotificationChannel(CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW)
         )
-        val open = PendingIntent.getActivity(
-            this, 0, Intent(this, MainActivity::class.java),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val notification = Notification.Builder(this, channelId)
-            .setContentTitle(getString(R.string.notif_title))
-            .setContentText(getString(R.string.notif_text))
-            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
-            .setContentIntent(open)
-            .setOngoing(true)
-            .build()
+        val notification = buildNotification()
 
         if (Build.VERSION.SDK_INT >= 34) {
             startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
@@ -221,19 +213,59 @@ class AwakeService : Service() {
 
     /** (Re)start the countdown from the chosen duration; "always" just clears it. */
     private fun startTimer() {
-        handler.removeCallbacks(timerDone)
         val minutes = timerMinutes(this)
-        if (minutes > 0) {
-            val ms = minutes * 60_000L
-            endAt = System.currentTimeMillis() + ms
-            handler.postDelayed(timerDone, ms)
+        setEnd(if (minutes > 0) System.currentTimeMillis() + minutes * 60_000L else 0L)
+    }
+
+    private fun setEnd(at: Long) {
+        handler.removeCallbacks(timerDone)
+        endAt = at
+        if (at > 0L) handler.postDelayed(timerDone, at - System.currentTimeMillis())
+        if (running) getSystemService(NotificationManager::class.java).notify(1, buildNotification())
+    }
+
+    /**
+     * Shows a live countdown when a timer is set, with Stop (and +10 min) buttons that work
+     * straight from the lock screen.
+     */
+    private fun buildNotification(): Notification {
+        val open = PendingIntent.getActivity(
+            this, 0, Intent(this, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        fun action(name: String) = PendingIntent.getService(
+            this, name.hashCode(), Intent(this, AwakeService::class.java).setAction(name),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val b = Notification.Builder(this, CHANNEL_ID)
+            .setContentTitle(getString(R.string.notif_title))
+            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setContentIntent(open)
+            .setOngoing(true)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
+            .addAction(Notification.Action.Builder(null, getString(R.string.notif_stop), action(ACTION_STOP)).build())
+        if (endAt > 0L) {
+            b.setContentText(getString(R.string.notif_until))
+                .setWhen(endAt)
+                .setShowWhen(true)
+                .setUsesChronometer(true)
+                .setChronometerCountDown(true)
+                .addAction(Notification.Action.Builder(null, getString(R.string.notif_extend), action(ACTION_EXTEND)).build())
         } else {
-            endAt = 0L
+            b.setContentText(getString(R.string.notif_always)).setShowWhen(false)
         }
+        return b.build()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.action == ACTION_RESTART_TIMER && running) {
+        if (intent?.action == ACTION_STOP) {
+            playSound(soundOff)
+            Haptics.click(this)
+            handler.postDelayed({ stopSelf() }, 300)
+        } else if (intent?.action == ACTION_EXTEND && running) {
+            // ten more minutes from when it would have ended (or from now, if that has passed)
+            setEnd(maxOf(endAt, System.currentTimeMillis()) + 10 * 60_000L)
+        } else if (intent?.action == ACTION_RESTART_TIMER && running) {
             // the user picked another duration while the switch is on
             startTimer()
         } else if (intent?.action == ACTION_TOGGLE) {

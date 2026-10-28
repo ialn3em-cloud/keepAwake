@@ -82,6 +82,10 @@
             android:name=".AutoAppsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".StylesActivity"
+            android:exported="false" />
+
         <service
             android:name=".WatcherService"
             android:exported="false"
