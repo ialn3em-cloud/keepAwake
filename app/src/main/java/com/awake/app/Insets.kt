@@ -5,7 +5,7 @@ import android.view.View
 import android.view.WindowInsets
 
 /**
- * From Android 15 apps draw behind the status and navigation bars.
+ * From Android 15 (and always from Android 16) apps draw behind the status and navigation bars.
  * Add their size to this view's own padding so its content stays clear of them.
  */
 @Suppress("DEPRECATION")

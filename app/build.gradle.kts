@@ -10,12 +10,12 @@ val hasReleaseKey = !keystoreFile.isNullOrBlank() && file(keystoreFile).exists()
 
 android {
     namespace = "com.awake.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.ialn3em.screenswitch"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         // grows with every GitHub build so each new APK installs over the previous one
         versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
         versionName = "1.${System.getenv("GITHUB_RUN_NUMBER") ?: "0"}"
