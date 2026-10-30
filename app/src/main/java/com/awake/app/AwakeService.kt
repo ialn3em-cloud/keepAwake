@@ -73,6 +73,7 @@ class AwakeService : Service() {
         /** Refresh every place that shows the switch: widget, quick settings tile and the open app. */
         fun notifyState(context: Context) {
             SwitchWidget.refresh(context)
+            SwitchWidgetMini.refresh(context)
             try {
                 TileService.requestListeningState(context, ComponentName(context, SwitchTileService::class.java))
             } catch (_: Exception) {}
