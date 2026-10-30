@@ -78,6 +78,18 @@
                 android:resource="@xml/switch_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".SwitchWidgetMini"
+            android:exported="false"
+            android:label="@string/widget_mini_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/switch_widget_mini_info" />
+        </receiver>
+
         <activity
             android:name=".AutoAppsActivity"
             android:exported="false" />

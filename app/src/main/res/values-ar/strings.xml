@@ -7,6 +7,8 @@
     <string name="notif_text">اضغط لفتح التطبيق وإيقافها</string>
     <string name="need_permission">فعّل «العرض فوق التطبيقات الأخرى» ثم ارجع واضغط المفتاح</string>
     <string name="widget_desc">اضغط المفتاح لإبقاء الشاشة مضاءة أو إيقافها</string>
+    <string name="widget_mini_name">المفتاح الأحمر</string>
+    <string name="widget_mini_desc">المفتاح الأحمر، ثابت مهما غيّرت التصميم</string>
     <string name="battery_stop">تم الإيقاف: البطارية منخفضة</string>
     <string name="battery_low_start">البطارية %1$d%%، وصّل الشاحن لتشغيل المفتاح</string>
     <string name="a11y_on">مشغّل، الشاشة تبقى مضاءة</string>

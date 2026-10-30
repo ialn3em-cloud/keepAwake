@@ -23,7 +23,7 @@ Android app that keeps the screen on with one tap on a realistic switch. Publish
 - `MainActivity` switch, timer chips, models button (top-left), mute button (top-right), Pro card (`ProEntry`).
 - `SwitchView` draws and animates the switch. `SwitchArt` paints the 9 models (also bitmaps for widget/gallery). `SwitchStyle` enum of models: CLASSIC is free, the other 8 are Pro.
 - `StylesActivity` model gallery. `ClickSounds` per-model click sounds (SoundPool) plus the mute setting (prefs "settings", key `click_sound`).
-- `SwitchTileService` Quick Settings tile, `SwitchWidget` home widget (follows the chosen model).
+- `SwitchTileService` Quick Settings tile. Two home widgets: `SwitchWidget` (follows the chosen model, picker preview `widget_preview` = classic white plate) and `SwitchWidgetMini` "Red switch" (fixed look, `widget_off`/`widget_on`).
 - `Pro` Google Play Billing, one-time product `pro_unlock`. `AutoAppsActivity` + `WatcherService` + `BootReceiver` Pro "automatic apps" (Usage access).
 - Sounds in `res/raw/` were synthesized with numpy; the factory model uses variant "A" (heavy breaker), approved by the owner.
 

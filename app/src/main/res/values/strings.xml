@@ -7,6 +7,8 @@
     <string name="notif_text">Tap to open the app and turn it off</string>
     <string name="need_permission">Allow Display over other apps, then come back and tap the switch</string>
     <string name="widget_desc">Tap the switch to keep the screen on or off</string>
+    <string name="widget_mini_name">Red switch</string>
+    <string name="widget_mini_desc">The red switch, always the same whatever model you choose</string>
     <string name="battery_stop">Stopped: battery is low</string>
     <string name="battery_low_start">Battery is at %1$d%%. Plug in the charger to turn the switch on</string>
     <string name="a11y_on">On, the screen stays on</string>

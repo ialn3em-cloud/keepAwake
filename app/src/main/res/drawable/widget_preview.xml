@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- picker preview of the main widget: the classic white plate (once placed, it follows the chosen model) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="70dp" android:height="110dp"
+    android:viewportWidth="70" android:viewportHeight="110">
+    <!-- soft shadow under the plate -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M8.8,6.4 H61.2 A4.3,4.3 0 0 1 65.5,10.7 V102.1 A4.3,4.3 0 0 1 61.2,106.4 H8.8 A4.3,4.3 0 0 1 4.5,102.1 V10.7 A4.3,4.3 0 0 1 8.8,6.4 Z" />
+    <path
+        android:strokeColor="#C8CCD2"
+        android:strokeWidth="0.7"
+        android:pathData="M8.8,5 H61.2 A4.3,4.3 0 0 1 65.5,9.3 V100.7 A4.3,4.3 0 0 1 61.2,105 H8.8 A4.3,4.3 0 0 1 4.5,100.7 V9.3 A4.3,4.3 0 0 1 8.8,5 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="0" android:startY="5"
+                android:endX="0" android:endY="105"
+                android:startColor="#F6F7F9"
+                android:endColor="#E1E4E8" />
+        </aapt:attr>
+    </path>
+    <!-- lamp (off) -->
+    <path
+        android:fillColor="#5C1A1A"
+        android:strokeColor="#7A1515"
+        android:strokeWidth="0.4"
+        android:pathData="M26.5,27.3 H43.5 A2.5,2.5 0 0 1 46,29.8 V33.2 A2.5,2.5 0 0 1 43.5,35.7 H26.5 A2.5,2.5 0 0 1 24,33.2 V29.8 A2.5,2.5 0 0 1 26.5,27.3 Z" />
+    <!-- rocker shadow -->
+    <path
+        android:fillColor="#40000000"
+        android:pathData="M25.8,42 H44.2 A1.8,1.8 0 0 1 46,43.8 V81.5 A1.8,1.8 0 0 1 44.2,83.3 H25.8 A1.8,1.8 0 0 1 24,81.5 V43.8 A1.8,1.8 0 0 1 25.8,42 Z" />
+    <!-- rocker: top half pressed in, bottom half raised (off) -->
+    <path
+        android:fillColor="#9E1F1B"
+        android:pathData="M24,61 V42.5 A1.8,1.8 0 0 1 25.8,40.7 H44.2 A1.8,1.8 0 0 1 46,42.5 V61 Z" />
+    <path
+        android:fillColor="#F0463F"
+        android:pathData="M24,61 V79.5 A1.8,1.8 0 0 0 25.8,81.3 H44.2 A1.8,1.8 0 0 0 46,79.5 V61 Z" />
+    <!-- gloss on the raised half -->
+    <path android:pathData="M24,61 H46 V72 H24 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="0" android:startY="61"
+                android:endX="0" android:endY="72"
+                android:startColor="#38FFFFFF"
+                android:endColor="#00FFFFFF" />
+        </aapt:attr>
+    </path>
+    <path
+        android:strokeColor="#7A1515"
+        android:strokeWidth="0.45"
+        android:pathData="M25.8,40.7 H44.2 A1.8,1.8 0 0 1 46,42.5 V79.5 A1.8,1.8 0 0 1 44.2,81.3 H25.8 A1.8,1.8 0 0 1 24,79.5 V42.5 A1.8,1.8 0 0 1 25.8,40.7 Z" />
+</vector>
