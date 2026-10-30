@@ -35,7 +35,7 @@ Android app that keeps the screen on with one tap on a realistic switch. Publish
 ## Google Play status (update this section as things change)
 Store kit is ready in `store/`: `LISTING.md` (texts), `images/`, `PRIVACY.md`, `PLAY_CONSOLE.md` (form answers), `TESTERS.md`.
 - [x] Developer account created: personal account, developer name Sahla Labs, $25 paid, Android device verified.
-- [ ] Identity verification: first attempt was rejected because the address proof did not match the payments profile address. Next attempt: a bank statement (dated within the last 60 days) whose address matches payments.google.com exactly. Attempts are limited.
+- [x] Identity verification approved.
 - [ ] Verify contact phone (unlocks after identity is approved).
 - [ ] Create the app, upload the AAB, fill App content from `PLAY_CONSOLE.md`, create `pro_unlock` product.
 - [ ] Closed testing: 12+ testers for 14 days (owner is collecting tester Gmail addresses).
