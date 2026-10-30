@@ -37,8 +37,12 @@ Store kit is ready in `store/`: `LISTING.md` (texts), `images/`, `PRIVACY.md`, `
 - [x] Developer account created: personal account, developer name Sahla Labs, $25 paid, Android device verified.
 - [x] Identity verification approved.
 - [ ] Verify contact phone (unlocks after identity is approved).
-- [ ] Create the app, upload the AAB, fill App content from `PLAY_CONSOLE.md`, create `pro_unlock` product.
-- [ ] Closed testing: 12+ testers for 14 days (owner is collecting tester Gmail addresses).
+- [x] App created in Play Console (2026-10-30): default language Arabic, free, category Tools. Store listing ar + en-US, icon, feature graphic, screenshots 1-8 in order.
+- [x] App content done: privacy policy, no ads, no login, no advertising ID, no gov/finance/health, audience 18+, data safety "no data collected/shared". Content rating: all "No" except "users can buy digital goods" = Yes (Pro); Brazil rated 14+.
+- [x] Foreground service declaration (special use, "Other") with demo video https://www.youtube.com/watch?v=h_rvQuU3hDE (unlisted, Sahla Labs channel).
+- [x] Closed testing track "Alpha": release 67 (1.67) uploaded, 178 countries, sent for review 2026-10-30 (managed publishing off).
+- [ ] Payments profile (owner must set it up), then create `pro_unlock` product.
+- [ ] Closed testing: 12+ testers for 14 days. No tester list yet; owner is collecting tester Gmail addresses.
 - [ ] Test a real purchase in closed testing (the app has no INTERNET permission; confirm billing still works).
 - [ ] Apply for production.
 - Note for the owner: with a personal account, the legal name and country are public, and the address becomes public once monetization is on.
