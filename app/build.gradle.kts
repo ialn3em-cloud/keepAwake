@@ -60,4 +60,6 @@ android {
 dependencies {
     // Google Play in-app purchase for the Pro upgrade
     implementation("com.android.billingclient:billing:8.0.0")
+    // billing brings fragment 1.1.0, which Google Play reports as outdated; force a current one
+    implementation("androidx.fragment:fragment:1.8.9")
 }

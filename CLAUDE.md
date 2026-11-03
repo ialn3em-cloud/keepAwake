@@ -45,4 +45,5 @@ Store kit is ready in `store/`: `LISTING.md` (texts), `images/`, `PRIVACY.md`, `
 - [ ] Closed testing: 12+ testers for 14 days. No tester list yet; owner is collecting tester Gmail addresses.
 - [ ] Test a real purchase in closed testing (the app has no INTERNET permission; confirm billing still works).
 - [ ] Apply for production.
+- [ ] Play warned on 2026-11-01 that release 67 uses outdated `androidx.fragment:fragment:1.1.0` (brought in by billing). Fixed by pinning 1.8.9 in `app/build.gradle.kts`; takes effect once a new release is uploaded.
 - Note for the owner: with a personal account, the legal name and country are public, and the address becomes public once monetization is on.
