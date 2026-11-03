@@ -42,7 +42,7 @@ Store kit is ready in `store/`: `LISTING.md` (texts), `images/`, `PRIVACY.md`, `
 - [x] Foreground service declaration (special use, "Other") with demo video https://www.youtube.com/watch?v=h_rvQuU3hDE (unlisted, Sahla Labs channel).
 - [x] Closed testing track "Alpha": release 67 (1.67) uploaded, 178 countries, sent for review 2026-10-30 (managed publishing off).
 - [ ] Payments profile (owner must set it up), then create `pro_unlock` product.
-- [ ] Closed testing: 12+ testers for 14 days. No tester list yet; owner is collecting tester Gmail addresses.
+- [ ] Closed testing: 12+ testers for 14 days. Alpha uses the account-wide list "Cash Box closed testers" (7 emails on 2026-11-04, shared with the Cash Box app, so edits affect both); sent for review with release 72. Need at least 5 more. Join link: https://play.google.com/apps/testing/com.ialn3em.screenswitch (Android: https://play.google.com/store/apps/details?id=com.ialn3em.screenswitch). Feedback: sahla.labs@gmail.com.
 - [ ] Test a real purchase in closed testing (the app has no INTERNET permission; confirm billing still works).
 - [ ] Apply for production.
 - [ ] Play warned on 2026-11-01 that release 67 uses outdated `androidx.fragment:fragment:1.1.0` (brought in by billing). Fixed by pinning 1.8.9 in `app/build.gradle.kts`; release 72 (1.72) with the fix was tested on the owner's phone and sent for review on Alpha 2026-11-04. Confirm the warning clears once it is published.
